@@ -5,13 +5,14 @@
     </head>
     <body>
         <span><%= message %></span>
-        <form action="/login" method="post">
+        <form action="/signup" method="post">
+            Real Name
+            <input type="text" name="name"></input>
             Username
             <input type="text" name="username"></input>
             Password
             <input type="password" name="password"></input>
-            <button type="submit">Login</button>
+            <button type="submit">Signup</button>
         </form>
-        <a href="/signup">Sign Up</a>
     </body>
 </html>

@@ -15,6 +15,14 @@
     "serve-favicon": "~2.3.0",
     "consolidate": "*",
     "underscore-express": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "passport": "*",
+    "passport-local": "*",
+    "connect-flash": "*",
+    "pg": "*",
+    "pg-query": "*",
+    "bcrypt-nodejs": "*",
+    "express-session": "*",
+    "connect-flash": "*"
   }
 }
