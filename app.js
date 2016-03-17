@@ -45,14 +45,16 @@ app.all('*', authenticateUser)
 require('./routes/index')(app)
 
 var fs = require('fs')
-var https = require('https')
-var key = fs.readFileSync('./key.pem')
-var cert = fs.readFileSync('./cert.pem')
-var https_options = {
-    key: key,
-    cert: cert
-}
+//var https = require('https')
+//var key = fs.readFileSync('./key.pem')
+//var cert = fs.readFileSync('./cert.pem')
+//var https_options = {
+//    key: key,
+//    cert: cert
+//}
 var port = process.env.PORT || 8080
 
-server = https.createServer(https_options, app).listen(port);
-console.log('Trackitime running on port ' + port + '!')
+//server = https.createServer(https_options, app).listen(port);
+app.listen(port, function() {
+    console.log('Trackitime running on port ' + port + '!')
+})
