@@ -7,6 +7,6 @@ Trackitime	is	used	with	an	easily-used web application,	which	is	also	supportive
 
 Trackitime is my university's database/web-app practice work (University of Helsinki).
 
-## Useful links
+### Useful links
 * <a href="https://trackitime.herokuapp.com" target="_blank">A running application in Heroku</a>
 * <a href="https://trackitime.herokuapp.com/documentation" target="_blank">The documentation of the app (PDF)</a>
