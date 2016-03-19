@@ -1,7 +1,12 @@
 <html>
     <body>
-        <p>Hello <%= user.username %>!</p>
-        <p>You've signed up, what you gonna do now?</p>
-        <a href="/logout">Log out</a>
+        <p>This is the front page of the app. Anyone can see this.</p>
+        <% if(user === undefined) { %>
+            <a href="/login">Log in</a>
+            <a href="/signup">Sign up</a>
+        <% } else { %>
+            <p>Except that you have logged in, hello <%= user.name != "" ? user.name : user.username %></p>
+            <a href="/dashboard">Dashboard</a>
+        <% } %>
     </body>
 </html>
