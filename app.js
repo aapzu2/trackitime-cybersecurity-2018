@@ -16,6 +16,8 @@ require('underscore-express')(app);
 app.engine('html',cons.underscore);
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.static(__dirname + '/public'))
+
 var db = require('./config/database')
 require('./config/passport')(passport, db); // pass passport for configuration
 
