@@ -39,14 +39,15 @@ app.use(passport.session()) // persistent login sessions
 
 require('./routes/index')(app)
 require('./routes/documentation')(app)
-require('./routes/users/login')(app, passport)
-require('./routes/users/signup')(app, passport)
-require('./routes/users/logout')(app, passport)
+require('./routes/login')(app, passport)
+require('./routes/signup')(app, passport)
+require('./routes/logout')(app, passport)
 
 var authenticateUser = require('./app/authenticateUser')
 app.all('*', authenticateUser)
 
 require('./routes/dashboard')(app)
+require('./routes/project')(app)
 
 var fs = require('fs')
 //var https = require('https')

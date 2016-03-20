@@ -1,0 +1,6 @@
+<a href="create">Create</a>
+<% _.each(projects, function(project) { %>
+    <p><%= project.name %></p>
+    <p><%= project.description %></p>
+    <p><%= project.started %></p>
+<% }) %>

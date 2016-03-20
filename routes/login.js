@@ -3,7 +3,7 @@ module.exports = function(app, passport) {
 
     app.get('/login', function(req, res, next) {
         var message = req.flash ? req.flash('loginMessage') : undefined
-        res.render('login.tmpl', { message: message });
+        res.render('login/login.tmpl', { message: message });
     });
 
     app.post('/login', passport.authenticate('local-login', {
