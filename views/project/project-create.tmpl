@@ -1,9 +1,39 @@
-<form action="/project/create" method="post">
-    Name
-    <input name="name" type="text"></input>
-    Description
-    <textarea name="description"></textarea>
-    Date Started
-    <input name="started" type="date"></input>
-    <button type="submit">Create</button>
-</form>
+<% if(message && message.length) { %>
+<div class="alert alert-danger"><%= message %></div>
+<% } %>
+
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/project/list">Projects</a></li>
+        <li class="active"><a href="/project/create">Create</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-lg-6 col-lg-offset-3">
+        <div class="box box-solid box-primary">
+            <div class="box-header">
+                <span class="box-title">Create New Project</span>
+            </div>
+            <form action="/project/create" method="post">
+                <div class="box-body">
+                        <div class="form-group">
+                            <label for="nameInput">Name</label>
+                            <input name="name" type="text" class="form-control" id="nameInput" placeholder="The name of the project">
+                        </div>
+                        <div class="form-group">
+                            <label for="descriptionInput">Description</label>
+                            <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" placeholder="Describe the project"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateStartedInput">Started</label>
+                            <input name="started" type="date" class="form-control" id="dateStartedInput" placeholder="When was/is the project started?">
+                        </div>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary pull-right">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

@@ -46,6 +46,7 @@ require('./routes/logout')(app, passport)
 var authenticateUser = require('./app/authenticateUser')
 app.all('*', authenticateUser)
 
+require('./routes/profile')(app)
 require('./routes/dashboard')(app)
 require('./routes/project')(app)
 

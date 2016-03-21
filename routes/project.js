@@ -31,8 +31,8 @@ module.exports = function(app) {
             description: req.body.description,
             started: req.body.started,
             user: req.user.id
-        }, function(project) {
-            res.redirect('/project/show/' + project.id)
+        }, function(id) {
+            res.redirect('/project/show/' + id)
         }, function(err) {
             req.flash('projectCreateError', err.body)
             res.redirect('/project/create')
