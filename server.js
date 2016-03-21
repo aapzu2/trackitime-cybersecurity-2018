@@ -43,12 +43,19 @@ require('./routes/login')(app, passport)
 require('./routes/signup')(app, passport)
 require('./routes/logout')(app, passport)
 
+
 var authenticateUser = require('./app/authenticateUser')
-app.all('*', authenticateUser)
+
+// After this the requests need being logged in
+app.all('*', authenticateUser.isLoggedIn)
 
 require('./routes/profile')(app)
 require('./routes/dashboard')(app)
 require('./routes/project')(app)
+
+// After this the request require admin rights
+app.all('*', authenticateUser.isAdmin)
+require('./routes/user')(app)
 
 var fs = require('fs')
 //var https = require('https')

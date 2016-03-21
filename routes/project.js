@@ -11,8 +11,10 @@ module.exports = function(app) {
         Project.findAllByUser(req.user, function(list) {
             res.render('main.tmpl', {
                 view: 'project/project-list',
-                user: req.user,
-                projects: list
+                data: {
+                    user: req.user,
+                    projects: list
+                }
             })
         })
     })
@@ -20,8 +22,10 @@ module.exports = function(app) {
     app.get('/project/create', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'project/project-create',
-            user: req.user,
-            message: req.flash('projectCreateError')
+            message: req.flash('projectCreateError'),
+            data: {
+                user: req.user
+            }
         })
     })
 
@@ -43,8 +47,10 @@ module.exports = function(app) {
         Project.findByUserAndId(req.params.id, req.user, function(project) {
             res.render('main.tmpl', {
                 view: 'project/project-show',
-                user: req.user,
-                project: project
+                data: {
+                    user: req.user,
+                    project: project
+                }
             })
         })
     })

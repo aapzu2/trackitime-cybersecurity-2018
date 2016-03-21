@@ -20,4 +20,8 @@ User.prototype.create = function(data, successCallback, errorCallback) {
         [data.name, data.username, data.hashedPassword], successCallback, errorCallback)
 }
 
+User.prototype.delete = function(id, successCallback, errorCallback) {
+    this.client.query('DELETE FROM "user" WHERE id = $1', [id], successCallback, errorCallback)
+}
+
 module.exports = new User()
