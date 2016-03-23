@@ -33,10 +33,11 @@ module.exports = function(app) {
 
     })
 
-    app.get('/project/edit/:id', function(req, res, next) {
-        Project.findById(req.params.id, function(foundUser) {
+    app.get('/user/edit/:id', function(req, res, next) {
+        User.findById(req.params.id, function(foundUser) {
             res.render('main.tmpl', {
-                view: 'user/user-show',
+                view: 'user/user-edit',
+                message: req.flash('userEditError'),
                 data: {
                     user: foundUser,
                 }

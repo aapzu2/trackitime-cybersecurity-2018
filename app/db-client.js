@@ -6,6 +6,9 @@ function DBClient() {
  
     var host = process.env.DATABASE_URL
 
+    if(!host)
+        throw "No DATABASE_URL!"
+
     var client = new pg.Client(host)
     client.connect(function(err) {
         if(err) throw err;
