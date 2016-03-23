@@ -1,10 +1,11 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
-var pg = require('pg');
 
 module.exports = function(passport, db) {
 
     var User = require('../app/models/user')
+
+    var emailClient = require('../app/email-client').connect()
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {
@@ -42,6 +43,14 @@ module.exports = function(passport, db) {
                         hashedPassword: hashedPassword
                     }, function(user) {
                         console.log('New user ' + req.body.name + ' (' + username + ') created!')
+                        emailClient.sendEmail({
+                            to: {
+                                name: "Aapeli Haanpuu",
+                                email: "aapzu@iki.fi"
+                            },
+                            subject: "Trackitime | User created",
+                            body: req.body.name + ' (' + username + ') has joined to Trackitime!'
+                        })
                         return done(null, user)
                     })
                 }
