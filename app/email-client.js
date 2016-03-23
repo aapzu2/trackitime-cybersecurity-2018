@@ -7,26 +7,17 @@ function EmailClient() {
     return this
 }
 
-EmailClient.prototype.validate = function(email) {
-    if(!process.env.EMAIL_PASSWORD) {
-        console.log("No EMAIL_PASSWORD set, cannot send any emails!")
-        if(email)
-            console.log("Tried to send email", email)
+EmailClient.prototype.validate = function() {
+    if(!process.env.SMTP_URL) {
+        console.log("No SMTP_URL set, cannot send any emails!")
         return false
     } else {
-        return email || true
+        return true
     }
 }
 
 EmailClient.prototype.connect = function() {
-    this.smtpTransport = nodemailer.createTransport("SMTP",{
-        service: "Gmail",  // sets automatically host, port and connection security settings
-        auth: {
-            user: "trackitime@gmail.com",
-            pass: process.env.EMAIL_PASSWORD
-        }
-    })
-
+    this.smtpTransport = nodemailer.createTransport(process.env.SMTP_URL)
     return this
 }
 
