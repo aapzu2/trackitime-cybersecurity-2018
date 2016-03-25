@@ -8,7 +8,7 @@ var cons = require('consolidate');
 var _ = require('underscore');
 var passport = require('passport')
 var session = require("express-session")
-var flash    = require('connect-flash');
+var flash    = require('express-flash');
 
 var app = express();
 

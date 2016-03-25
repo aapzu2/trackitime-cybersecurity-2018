@@ -11,8 +11,11 @@
 
             <div class="register-box-body">
                 <p class="login-box-msg">Sign up</p>
-                <% if(message && message.length) { %>
-                    <div class="alert alert-danger"><%= message %></div>
+                <% if(messages.info) { %>
+                    <div class="alert alert-info text-center flash-alert"><%= messages.info %></div>
+                <% } %>
+                <% if(messages.error) { %>
+                    <div class="alert alert-danger text-center flash-alert"><%= messages.error %></div>
                 <% } %>
                 <form action="/signup" method="post">
                     <div class="form-group has-feedback">

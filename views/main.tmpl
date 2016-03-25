@@ -58,6 +58,12 @@
             </header>
             <div class="content-wrapper" style="min-height: 181px;">
                 <div class="container">
+                    <% if(messages.info) { %>
+                        <div class="alert alert-info flash-alert text-center"><%= messages.info %></div>
+                    <% } %>
+                    <% if(messages.error) { %>
+                        <div class="alert alert-danger flash-alert text-center"><%= messages.error %></div>
+                    <% } %>
                     <%= include(view) %>
                 </div>
             </div>

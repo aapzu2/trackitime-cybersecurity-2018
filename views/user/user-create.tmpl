@@ -1,0 +1,50 @@
+<section class="content-header">
+<ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li>User</li>
+    <li>Create</li>
+</ol>
+</section>
+<section class="content">
+<div class="col-lg-6 col-lg-offset-3">
+    <div class="box box-solid box-primary">
+        <div class="box-header">
+            <span class="box-title">Create a new user</span>
+        </div>
+        <form class="no-margin" action="/user/create" method="post">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="nameInput">Full Name</label>
+                    <input name="name" type="text" class="form-control" id="nameInput" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <label for="userNameInput">Username</label>
+                    <input type="text" class="form-control" id="userNameInput" placeholder="Username" name="username">
+                </div>
+                <div class="form-group">
+                    <label for="newPasswordInput">Password</label>
+                    <input name="password" type="password" class="form-control" id="newPasswordInput" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="newPasswordAgainInput">Password Again</label>
+                    <input name="password2" type="password" class="form-control" id="newPasswordAgainInput" placeholder="Password Again">
+                </div>
+                <div class="form-group">
+                    <div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="isAdmin"> Admin rights?
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary pull-right">
+                    Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</section>

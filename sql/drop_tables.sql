@@ -1,0 +1,3 @@
+DROP TABLE "user" CASCADE;
+DROP TABLE "project" CASCADE;
+DROP TABLE "instance" CASCADE;

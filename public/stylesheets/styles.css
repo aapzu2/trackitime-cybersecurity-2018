@@ -2,3 +2,8 @@
 body {
 
 }
+
+div.alert.flash-alert {
+    margin-top: 15px;
+    margin-bottom: -5px;
+}

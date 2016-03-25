@@ -16,11 +16,10 @@
     "underscore": "*",
     "passport": "*",
     "passport-local": "*",
-    "connect-flash": "*",
+    "express-flash": "*",
     "pg": "*",
     "bcrypt-nodejs": "*",
     "express-session": "*",
-    "connect-flash": "*",
     "fs": "*",
     "nodemailer": "0.7.1"
   }

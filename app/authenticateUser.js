@@ -20,8 +20,8 @@ function isAdmin(req, res, next) {
 
     // if they aren't redirect them to the home page
 
-    req.session.returnUrl = req.originalUrl
-    res.redirect('/login');
+    res.statusCode = '404'
+    res.send("Not found");
 
     return this
 }

@@ -7,7 +7,7 @@ module.exports = function(app, passport) {
     app.get('/profile/edit', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'profile/profile-edit',
-            message: req.flash('profileEditError'),
+            message: req.flash('info'),
             data: {
                 user: req.user
             }
@@ -27,7 +27,7 @@ module.exports = function(app, passport) {
             var password = req.body.password
 
             if (!bcrypt.compareSync(password, user.password)) {
-                req.flash('profileError', err.body)
+                req.flash('info', err.body)
                 res.reload()
             } else {
                 User.delete(id, function() {
