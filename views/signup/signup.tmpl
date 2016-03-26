@@ -3,7 +3,7 @@
     <head>
         <%= include('../main-head') %>
     </head>
-    <body class="register-page">
+    <body class="register-page signup-page">
         <div class="register-box">
             <div class="register-logo">
                 <a href="/">Trackitime</a>
@@ -17,7 +17,7 @@
                 <% if(messages.error) { %>
                     <div class="alert alert-danger text-center flash-alert"><%= messages.error %></div>
                 <% } %>
-                <form action="/signup" method="post">
+                <form action="/signup" method="post" id="signupForm">
                     <div class="form-group has-feedback">
                         <input name="name" type="text" class="form-control" placeholder="Full name"/>
                         <span class="fa fa-user form-control-feedback"></span>
@@ -34,6 +34,9 @@
                         <input name="password2" type="password" class="form-control" placeholder="Retype password"/>
                         <span class="fa fa-log-in form-control-feedback"></span>
                     </div>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
                     <div class="row">
                         <div class="col-xs-8">
                             <a href="login.html" class="text-center">I already have an account</a>
@@ -49,5 +52,10 @@
         </div>
 
         <%= include('../main-defer') %>
+        <script>
+            var form = new PasswordForm({
+                el: "#signupForm"
+            })
+        </script>
     </body>
 </html>

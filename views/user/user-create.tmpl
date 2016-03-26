@@ -11,7 +11,7 @@
         <div class="box-header">
             <span class="box-title">Create a new user</span>
         </div>
-        <form class="no-margin" action="/user/create" method="post">
+        <form class="no-margin" action="/user/create" method="post" id="userCreateForm">
             <div class="box-body">
                 <div class="form-group">
                     <label for="nameInput">Full Name</label>
@@ -28,6 +28,9 @@
                 <div class="form-group">
                     <label for="newPasswordAgainInput">Password Again</label>
                     <input name="password2" type="password" class="form-control" id="newPasswordAgainInput" placeholder="Password Again">
+                </div>
+                <div class="progress">
+                    <div class="progress-bar"></div>
                 </div>
                 <div class="form-group">
                     <div>
@@ -48,3 +51,11 @@
     </div>
 </div>
 </section>
+
+<script>
+$(document).ready(function() {
+    var form = new PasswordForm({
+        el: "#userCreateForm"
+    })
+})
+</script>

@@ -54,7 +54,7 @@
         <!-- Modal -->
 <div class="modal modal-danger fade" id="userDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
-        <form action="/user/delete" method="post" class="no-margin">
+        <form action="/user/delete" method="post" class="no-margin" id="userEditForm">
             <input type="hidden" name="id" value="<%= data.user.id %>"></input>
             <div class="modal-content">
                 <div class="modal-header">
@@ -72,3 +72,12 @@
         </form>
     </div>
 </div>
+
+
+<script>
+$(document).ready(function() {
+    var form = new PasswordForm({
+        el: "#userEditForm"
+    })
+})
+</script>
