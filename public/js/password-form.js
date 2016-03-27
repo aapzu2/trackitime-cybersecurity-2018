@@ -3,9 +3,12 @@ function PasswordForm(opt) {
     var _this = this
 
     this.opt = $.extend({
-        passwordName: 'password',
-        password2Name: 'password2',
-        progressBarEl: '.progress-bar'
+        nameInput: "input[name='name']",
+        usernameInput: "input[name='username']",
+        passwordInput: "input[name='password']",
+        password2Input: "input[name='password2']",
+        progressBarEl: 'input[name="password"]',
+        infoEl: ".pwd-info"
     }, opt)
 
     if(!this.opt.el) {
@@ -13,18 +16,47 @@ function PasswordForm(opt) {
     }
     this.$el = $(this.opt.el)
 
-    this.passwordInput = this.$el.find("input[name='" + this.opt.passwordName +"']")
-    this.password2Input = this.$el.find("input[name='" + this.opt.password2Name +"']")
-    this.progressBar = new ProgressBar(this.$el.find(this.opt.progressBarEl), 0, 4)
+    this.passwordInput = this.$el.find(this.opt.passwordInput)
+    this.password2Input = this.$el.find(this.opt.password2Input)
+    this.nameInput = this.$el.find(this.opt.nameInput)
+    this.usernameInput = this.$el.find(this.opt.usernameInput)
+    this.progressEl = $(this.opt.progressBarEl)
+    this.progressEl.addClass("pwd-strength-indicator")
+    this.infoEl = $(this.opt.infoEl)
 
+    this.nameInput.keyup(function() {
+        addOwnWords()
+    })
+    this.usernameInput.keyup(function() {
+        addOwnWords()
+    })
+    var addOwnWords = function() {
+        _this.ownWords = []
+        $(_this.nameInput).val().split(/ /g).forEach(function(word) {
+            if(word !== "")
+                _this.ownWords.push(word)
+        })
+        _this.ownWords.push($(_this.usernameInput).val())
+    }
     var timeout
     this.passwordInput.keyup(function() {
-        var pwd = zxcvbn($(this).val())
+        var pwd = zxcvbn($(this).val(), _this.ownWords)
         if(timeout)
             clearTimeout(timeout)
         timeout = setTimeout(function() {
-            _this.progressBar.setValue(pwd.score)
-        }, 100)
+            _this.setValue(pwd.score)
+            _this.infoEl.empty()
+            if(pwd.feedback.warning) {
+                _this.infoEl.append($("<p/>", {
+                    text: pwd.feedback.warning
+                }))
+            }
+            if(pwd.feedback.suggestions.length) {
+                _this.infoEl.append($("<p/>", {
+                    text: pwd.feedback.suggestions[0]
+                }))
+            }
+        }, 250)
     })
 
     var timeout2
@@ -32,45 +64,40 @@ function PasswordForm(opt) {
         if(timeout2)
             clearTimeout(timeout2)
         timeout2 = setTimeout(function() {
-            if(_this.passwordInput.val() != _this.password2Input.val())
-                console.log("Passwords do not match!")
+            _this.infoEl.empty()
+            if(_this.passwordInput.val() != _this.password2Input.val()) {
+                _this.infoEl.append($("<p/>", {
+                    text: "Passwords are not the same!"
+                }))
+            }
         }, 500)
     })
 
-    function ProgressBar(el, min, max) {
-        var _this = this
+    this.setValue = function(score) {
+        var setClass = function(cl) {
+            _this.progressEl.removeClass("bg-green")
+            _this.progressEl.removeClass("bg-light-green")
+            _this.progressEl.removeClass("bg-yellow")
+            _this.progressEl.removeClass("bg-orange")
+            _this.progressEl.removeClass("bg-red")
 
-        this.min = min
-        this.max = max
-
-        this.$el = $(el)
-        this.progressBar = this.$el
-
-        this.setValue = function(value) {
-            var addClass = function(color) {
-                _this.progressBar.removeClass("progress-bar-yellow")
-                _this.progressBar.removeClass("progress-bar-green")
-                _this.progressBar.removeClass("progress-bar-blue")
-                _this.progressBar.removeClass("progress-bar-red")
-
-                _this.progressBar.addClass("progress-bar-" + color)
-            }
-
-            var a = Math.max(min, (value/(max - min)))
-            var ratio = Math.min(a, max)
-            if (ratio < 0.25) {
-                addClass("red")
-            } else if (ratio < 0.5) {
-                addClass("yellow")
-            } else if (ratio < 0.75) {
-                addClass("blue")
-            } else {
-                addClass("green")
-            }
-            var width = this.progressBar.parent().width()
-
-            width = width*0.1 + (width * 0.9) * ratio
-            this.progressBar.width(width)
+            _this.progressEl.addClass(cl)
+        }
+        switch(score) {
+            case 0:
+                setClass("bg-red")
+                break;
+            case 1:
+                setClass("bg-orange")
+                break;
+            case 2:
+                setClass("bg-yellow")
+                break;
+            case 3:
+                setClass("bg-light-green")
+                break;
+            case 4:
+                setClass("bg-green")
         }
     }
 }

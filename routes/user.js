@@ -49,7 +49,8 @@ module.exports = function(app) {
             res.render('main.tmpl', {
                 view: 'user/user-edit',
                 data: {
-                    user: foundUser
+                    user: req.user,
+                    editableUser: foundUser
                 }
             })
         })
@@ -57,8 +58,8 @@ module.exports = function(app) {
 
     app.post('/user/edit', function(req, res, next) {
         User.edit(req.body, function(row) {
-            req.flash('info', "User " + row.id + " updated successfully!")
-            res.redirect('/user/list')
+            req.flash('info', "User updated successfully!")
+            res.redirect('back')
         }, function(err) {
             req.flash('error', err.message)
             res.redirect('back')

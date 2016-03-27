@@ -3,7 +3,6 @@ module.exports = function(app, passport) {
 
     app.get('/signup', function(req, res, next) {
         res.render('signup/signup.tmpl', {
-            message: req.flash ? req.flash('signupMessage') : "",
             data: {
                 title: "Sign up to Trackitime"
             }

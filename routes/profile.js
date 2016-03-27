@@ -7,7 +7,6 @@ module.exports = function(app, passport) {
     app.get('/profile/edit', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'profile/profile-edit',
-            message: req.flash('info'),
             data: {
                 user: req.user
             }
@@ -15,7 +14,13 @@ module.exports = function(app, passport) {
     })
 
     app.post('/profile/edit', function(req, res, next) {
-
+        User.edit(req.body, function(row) {
+            req.flash('info', "Profile updated succesfully")
+            res.redirect('back')
+        }, function(err) {
+            req.flash('error', err.message)
+            res.redirect('back')
+        })
     })
 
     app.post('/profile/delete', function(req, res, next) {

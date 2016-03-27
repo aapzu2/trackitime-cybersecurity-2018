@@ -35,17 +35,63 @@ User.prototype.delete = function(id, successCallback, errorCallback) {
 }
 
 User.prototype.edit = function(data, successCallback, errorCallback) {
+    var _this = this
+
     var constString = ""
-    var id = data.id
-    data.id = undefined
-    var i = 0
-    Object.keys(data).forEach(function(key) {
-        constString += key + "=" + data[key]
-        if(i < Object.keys(data).length)
-            constString += ","
-        i++
-    });
-    this.client.query('UPDATE "user" SET ' + constString + 'WHERE id = ? RETURNING id', [id], successCallback, errorCallback)
+    var username = data.username
+    var name = data.name
+    var oldPwd = data.oldPassword
+    var pwd = data.password
+    var pwd2 = data.password2
+
+    var err
+    this.findByUsername(username, function(row) {
+        if(pwd || oldPwd) {
+            if (!bcrypt.compareSync(oldPwd, row.password))
+                err = new Error("Wrong old password")
+            else if(pwd != pwd2)
+                err = new Error("Passwords don't match!")
+
+            var hashedPassword = bcrypt.hashSync(data.password, null, null)
+            constString += "password='" + hashedPassword + "', "
+        }
+        if(err) {
+            handleError(err)
+        } else {
+            constString += "name='" + name + "'"
+            _this.client.query('UPDATE "user" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
+        }
+
+    }, function(err) {
+        handleError(err)
+    })
+
+    var handleError= function(err) {
+        if (errorCallback) {
+            errorCallback(err)
+        } else
+            throw err
+    }
+}
+
+User.prototype.editByAdmin = function(data, successCallback, errorCallback) {
+    var constString = ""
+    var username = data.username
+    var name = data.name
+    var pwd = data.password
+    var isAdmin = data.isAdmin ? true : false
+
+    if(pwd) {
+        var hashedPassword = bcrypt.hashSync(data.password, null, null)
+        constString += "password='" + hashedPassword + "', "
+    }
+    constString += "name='" + name + "', "
+    constString += "\"isAdmin\"='" + isAdmin + "' "
+    this.client.query('UPDATE "user" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
+}
+
+User.prototype.editField = function(field, value, username, successCallback, errorCallback) {
+    this.client.first('UPDATE "' + field + '" = $1 WHERE "username" = $2', [value, username], successCallback, errorCallback)
 }
 
 module.exports = new User()

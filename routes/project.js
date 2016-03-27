@@ -22,7 +22,6 @@ module.exports = function(app) {
     app.get('/project/create', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'project/project-create',
-            message: req.flash('projectCreateError'),
             data: {
                 user: req.user
             }

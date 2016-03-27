@@ -1,6 +1,3 @@
-<% if(message && message.length) { %>
-<div class="alert alert-danger"><%= message %></div>
-<% } %>
 
 <section class="content-header">
     <ol class="breadcrumb">
@@ -15,12 +12,13 @@
         <div class="box-header">
             <span class="box-title">Edit your profile</span>
         </div>
-        <form class="no-margin" action="/project/create" method="post">
+        <form class="no-margin" action="/profile/edit" method="post" id="profileEditForm">
             <div class="box-body">
                 <div class="form-group">
                     <label for="userNameInput">Username</label>
-                    <input type="text" class="form-control" id="userNameInput" value="<%= data.user.username %>" disabled title="The username cannot be changed">
+                    <input type="text" name="username" class="form-control" id="userNameInput" value="<%= data.user.username %>" disabled title="The username cannot be changed">
                 </div>
+                <input type="hidden" name="username" value="<%= data.user.username %>">
                 <div class="form-group">
                     <label for="nameInput">Full Name</label>
                     <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.user.name %>">
@@ -36,6 +34,9 @@
                 <div class="form-group">
                     <label for="newPasswordAgainInput">New Password Again</label>
                     <input name="password2" type="password" class="form-control" id="newPasswordAgainInput" placeholder="New Password Again">
+                </div>
+                <div class="col-xs-12 pwd-info-container">
+                    <span class="pwd-info"></span>
                 </div>
             </div>
             <div class="box-footer">
@@ -71,3 +72,10 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        var form = new PasswordForm({
+            el: "#profileEditForm"
+        })
+    })
+</script>

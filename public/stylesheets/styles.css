@@ -19,3 +19,13 @@ form .progress,
 form .progress {
     background-color: #FFFFFF;
 }
+
+form .pwd-info-container {
+    text-align: center;
+}
+
+form .pwd-strength-indicator.bg-light-green {
+    background-color: rgba(87,218,0,0.5);
+}
+
+

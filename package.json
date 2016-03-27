@@ -20,7 +20,6 @@
     "pg": "*",
     "bcrypt-nodejs": "*",
     "express-session": "*",
-    "fs": "*",
-    "nodemailer": "0.7.1"
+    "fs": "*"
   }
 }

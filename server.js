@@ -12,6 +12,8 @@ var flash    = require('express-flash');
 
 var app = express();
 
+app.use(favicon("./favicon.ico"))
+
 require('underscore-express')(app);
 app.engine('html',cons.underscore);
 app.set('views', path.join(__dirname, 'views'));
