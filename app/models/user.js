@@ -5,15 +5,15 @@ function User() {
 }
 
 User.prototype.findById = function(id, successCallback, errorCallback) {
-    this.client.first('SELECT * FROM "user" WHERE id = $1', [id], successCallback, errorCallback)
+    this.client.first('SELECT * FROM "User" WHERE id = $1', [id], successCallback, errorCallback)
 }
 
 User.prototype.findByUsername = function(username, successCallback, errorCallback) {
-    this.client.first('SELECT * FROM "user" WHERE username = $1', [username], successCallback, errorCallback)
+    this.client.first('SELECT * FROM "User" WHERE username = $1', [username], successCallback, errorCallback)
 }
 
 User.prototype.findAll = function(successCallback, errorCallback) {
-    this.client.query('SELECT * FROM "user"', [], successCallback, errorCallback)
+    this.client.query('SELECT * FROM "User"', [], successCallback, errorCallback)
 }
 
 User.prototype.create = function(data, successCallback, errorCallback) {
@@ -25,13 +25,13 @@ User.prototype.create = function(data, successCallback, errorCallback) {
             throw err
     } else {
         var hashedPassword = bcrypt.hashSync(data.password, null, null)
-        this.client.first('INSERT INTO "user" (name, username, password) values ($1, $2, $3) RETURNING id',
+        this.client.first('INSERT INTO "User" (name, username, password) values ($1, $2, $3) RETURNING id',
             [data.name, data.username, hashedPassword], successCallback, errorCallback)
     }
 }
 
 User.prototype.delete = function(id, successCallback, errorCallback) {
-    this.client.query('DELETE FROM "user" WHERE id = $1', [id], successCallback, errorCallback)
+    this.client.query('DELETE FROM "User" WHERE id = $1', [id], successCallback, errorCallback)
 }
 
 User.prototype.edit = function(data, successCallback, errorCallback) {
@@ -59,7 +59,7 @@ User.prototype.edit = function(data, successCallback, errorCallback) {
             handleError(err)
         } else {
             constString += "name='" + name + "'"
-            _this.client.query('UPDATE "user" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
+            _this.client.query('UPDATE "User" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
         }
 
     }, function(err) {
@@ -87,7 +87,7 @@ User.prototype.editByAdmin = function(data, successCallback, errorCallback) {
     }
     constString += "name='" + name + "', "
     constString += "\"isAdmin\"='" + isAdmin + "' "
-    this.client.query('UPDATE "user" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
+    this.client.query('UPDATE "User" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
 }
 
 User.prototype.editField = function(field, value, username, successCallback, errorCallback) {

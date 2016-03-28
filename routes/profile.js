@@ -7,6 +7,7 @@ module.exports = function(app, passport) {
     app.get('/profile/edit', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'profile/profile-edit',
+            title: "Edit Your Profile",
             data: {
                 user: req.user
             }

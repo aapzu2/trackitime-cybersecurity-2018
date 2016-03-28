@@ -11,6 +11,7 @@ module.exports = function(app) {
         User.findAll(function(list) {
             res.render('main.tmpl', {
                 view: 'user/user-list',
+                title: "All Users",
                 data: {
                     user: req.user,
                     users: list
@@ -22,6 +23,7 @@ module.exports = function(app) {
     app.get('/user/create', function(req, res, next) {
         res.render('main.tmpl', {
             view: 'user/user-create',
+            title: "Create User",
             data: {
                 user: req.user
             }
@@ -48,6 +50,7 @@ module.exports = function(app) {
         User.findById(req.params.id, function(foundUser) {
             res.render('main.tmpl', {
                 view: 'user/user-edit',
+                title: "Edit foundUser.username",
                 data: {
                     user: req.user,
                     editableUser: foundUser
