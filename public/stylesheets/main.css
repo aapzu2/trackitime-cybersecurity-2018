@@ -1,0 +1,34 @@
+body div.alert.flash-alert {
+  margin-top: 15px;
+  margin-bottom: -5px;
+}
+form .progress,
+form .progress {
+  background-color: #FFFFFF;
+}
+form .pwd-info-container {
+  text-align: center;
+}
+form .pwd-strength-indicator.bg-light-green {
+  background-color: rgba(87, 218, 0, 0.5);
+}
+body.login-page .bg-text {
+  z-index: 6;
+  font-family: Arial;
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+body.login-page div.alert.flash-alert {
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+body.signup-page div.alert.flash-alert {
+  margin-top: 0px;
+  margin-bottom: 20px;
+}

@@ -8,7 +8,8 @@ var cons = require('consolidate');
 var _ = require('underscore');
 var passport = require('passport')
 var session = require("express-session")
-var flash    = require('express-flash');
+var flash    = require('express-flash')
+var fs = require('fs')
 
 var app = express();
 
@@ -54,22 +55,17 @@ app.all('*', authenticateUser.isLoggedIn)
 require('./routes/profile')(app)
 require('./routes/dashboard')(app)
 require('./routes/project')(app)
+require('./routes/instance')(app)
 
 // After this the request require admin rights
 app.all('*', authenticateUser.isAdmin)
+
 require('./routes/user')(app)
 
-var fs = require('fs')
-//var https = require('https')
-//var key = fs.readFileSync('./key.pem')
-//var cert = fs.readFileSync('./cert.pem')
-//var https_options = {
-//    key: key,
-//    cert: cert
-//}
 var port = process.env.PORT || 8080
 
 //server = https.createServer(https_options, app).listen(port);
 app.listen(port, function() {
     console.log('Trackitime running on port ' + port + '!')
 })
+
