@@ -1,5 +1,5 @@
 # Trackitime
-### What it is?
+### What is it?
 How	many	hours	did	you	use	with	your	practice	work?	Or	with	your	origami	
 project?	Trackitime	is	an application	 to	solve	 this	problem.	With	Trackitime	one	can	easily	create	a	new	project,	and	add	time	periods	spent	with	the	project.
 Later	some	statistics	can	be	seen	of	the	project:	what	have	been	done,	how	much	time	have	been	spent	altogether	and	so	on.
