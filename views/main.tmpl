@@ -21,7 +21,7 @@
                                     <li><a href="/login">Log in</a></li>
                                     <li><a href="/signup">Sign up</a></li>
                                 <% } else { %>
-                                    <li><a href="/dashboard">Dashboard</a></li>
+                                    <li><a href="/instance/list">Timeline</a></li>
                                     <li><a href="/project">Projects</a></li>
                                     <% if(data.user.isAdmin === true) { %>
                                         <li>
@@ -74,6 +74,19 @@
                 <!-- /.container -->
             </footer>
         </div>
+
+        <script>
+            $(document).ready(function() {
+                $(".moment-date").each(function(i, el) {
+                    el = $(el)
+                    el.text(moment(el.text()).utcOffset(0).format("DD MMM YYYY"))
+                })
+                $(".moment-time").each(function(i, el) {
+                    el = $(el)
+                    el.text(moment(el.text()).utcOffset(0).format("HH:mm"))
+                })
+            })
+        </script>
 
         <%= include('main-defer') %>
     </body>

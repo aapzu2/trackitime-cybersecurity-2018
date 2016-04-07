@@ -1,7 +1,9 @@
 
 module.exports = function(app) {
 
+    var moment = require('moment')
     var Project = require('../app/models/project')
+    var Instance = require('../app/models/instance')
 
     app.get('/project', function(req, res, next) {
         res.redirect('/project/list')
@@ -50,16 +52,26 @@ module.exports = function(app) {
             res.redirect('/project/list')
         }
         Project.findByUserAndId(req.params.id, req.user, function(project) {
-            Project.findOwnersByProject(project, function(owners) {
-                res.render('main.tmpl', {
-                    view: 'project/project-show',
-                    title: project.name,
-                    data: {
-                        user: req.user,
-                        owners: owners,
-                        project: project
-                    }
+            Instance.findAllByProjectAndUser(project.id, req.user, function(instances) {
+                var total = 0
+                instances.forEach(function(instance) {
+                    var dur = moment(instance.to).diff(moment(instance.from))
+                    instance.duration = moment.duration(dur).humanize()
+                    total += moment(instance.to).diff(moment(instance.from))
                 })
+                Project.findOwnersByProject(project, function(owners) {
+                    res.render('main.tmpl', {
+                        view: 'project/project-show',
+                        title: project.name,
+                        data: {
+                            user: req.user,
+                            owners: owners,
+                            project: project,
+                            instances: instances,
+                            totalUsed: moment.duration(total).humanize()
+                        }
+                    })
+                }, errorHandler)
             }, errorHandler)
         }, errorHandler)
     })

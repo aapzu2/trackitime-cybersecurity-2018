@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "UserProject" (
 	"project" INTEGER REFERENCES "Project",
 	"user" INTEGER REFERENCES "User",
+	"isAdmin" BOOLEAN DEFAULT 1,
 	PRIMARY KEY("project", "user")
 );
 CREATE TABLE IF NOT EXISTS "Project" (

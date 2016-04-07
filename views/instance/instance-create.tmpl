@@ -50,6 +50,7 @@
 <script>
     $(document).ready(function() {
         $('#fromInput').datetimepicker({
+            format: "DD.MM.YYYY HH:mm",
             sideBySide: true,
             widgetPositioning: {
                 vertical: "bottom"
@@ -57,6 +58,7 @@
             defaultDate: new Date(Date.now() - 60*60*1000)
         })
         $('#toInput').datetimepicker({
+            format: "DD.MM.YYYY HH:mm",
             sideBySide: true,
             widgetPositioning: {
                 vertical: "bottom"

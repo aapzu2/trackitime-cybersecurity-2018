@@ -61,9 +61,9 @@ Project.prototype.create = function(data, successCallback, errorCallback) {
         this.client.first('INSERT INTO "Project" (name, description, started) VALUES ($1, $2, $3) RETURNING id', [data.name, data.description, data.started],
             function(row) {
                 _this.client.first('' +
-                    'INSERT INTO "UserProject" ("user", "project") ' +
-                    'VALUES ($1, $2) RETURNING project AS id',
-                    [userId, row.id], successCallback, errorCallback)
+                    'INSERT INTO "UserProject" ("user", "project", "isAdmin") ' +
+                    'VALUES ($1, $2, $3) RETURNING project AS id',
+                    [userId, row.id, data.isAdmin ? data.isAdmin : 1], successCallback, errorCallback)
             }, errorCallback)
     }
 }
@@ -86,8 +86,8 @@ Project.prototype.shareToUser = function(projectId, username, successCallback, e
                 _this.client.first('SELECT * FROM "UserProject" WHERE user = $1 AND project = $2', [user.id, projectId], function(row) {
                     if(row === undefined) {
                         _this.client.first('' +
-                            'INSERT INTO "UserProject" ("user", "project") ' +
-                            'VALUES ($1, $2) RETURNING project AS id',
+                            'INSERT INTO "UserProject" ("user", "project", "isAdmin") ' +
+                            'VALUES ($1, $2, 0) RETURNING project AS id',
                             [user.id, projectId], successCallback, errorHandler)
                     } else {
                         successCallback({

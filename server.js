@@ -53,7 +53,6 @@ var authenticateUser = require('./app/authenticateUser')
 app.all('*', authenticateUser.isLoggedIn)
 
 require('./routes/profile')(app)
-require('./routes/dashboard')(app)
 require('./routes/project')(app)
 require('./routes/instance')(app)
 

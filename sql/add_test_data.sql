@@ -15,15 +15,15 @@ VALUES('HIMYM', '2016-03-24', 'Pakko katsoa')
 RETURNING "id", "name", "started", "description";
 
 INSERT INTO "UserProject"("user", "project") 
-VALUES('0', '0')
+VALUES('0', '0', '1')
 RETURNING "user", "project";
 
 INSERT INTO "UserProject"("user", "project") 
-VALUES('1', '0')
+VALUES('1', '0', '0')
 RETURNING "user", "project";
 
 INSERT INTO "UserProject"("user", "project") 
-VALUES('0', '1')
+VALUES('0', '1', '1')
 RETURNING "user", "project";
 
 INSERT INTO "TimeInstance"("description", "from", "to", "project", "user") 
