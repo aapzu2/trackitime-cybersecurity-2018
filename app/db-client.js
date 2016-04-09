@@ -1,4 +1,4 @@
-
+"use strict";
 function DBClient() {
     var pg = require('pg')
 
@@ -9,31 +9,36 @@ function DBClient() {
     if(!host)
         throw "No DATABASE_URL!"
 
-    var client = new pg.Client(host)
-    client.connect(function(err) {
+    this.client = new pg.Client(host)
+    this.client.connect(function(err) {
         if(err) throw err;
     })
+}
 
-
-    this.query = function(query, params, successCallback, errorCallback) {
-        client.query(query, params, function(err, result) {
+DBClient.prototype.query = function(query, params) {
+    var _this = this
+    return new Promise(function(resolve, reject) {
+        _this.client.query(query, params, function(err, result) {
             if(err) {
-                if(errorCallback !== undefined) {
-                    errorCallback(err)
-                } else {
-                    throw err
-                }
-            } else if(successCallback) {
-                successCallback(result.rows)
+                reject(err)
+            } else {
+                resolve(result.rows)
             }
         })
-    }
+    })
+}
 
-    this.first = function(query, params, successCallback, errorCallback) {
-        this.query(query, params, function(rows) {
-            successCallback(rows[0])
-        }, errorCallback)
-    }
+DBClient.prototype.first = function(query, params) {
+    var _this = this
+    return new Promise(function(resolve, reject) {
+        _this.query(query, params)
+            .then(function(result) {
+                resolve(result[0])
+            })
+            .catch(function(err) {
+                reject(err)
+            })
+    })
 }
 
 module.exports = new DBClient()
