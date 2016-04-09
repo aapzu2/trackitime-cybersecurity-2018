@@ -24,9 +24,11 @@ module.exports = function(app, passport) {
         var params = req.body
         params.user = req.user
         Instance.create(params, function() {
-            req.redirect('/project/show/'+params.project)
+            req.flash('info', 'New instance created!')
+            res.redirect('/project/show/'+params.project)
         }, function(err) {
-            console.log(err)
+            req.flash('error', err.message)
+            res.redirect('back')
         })
     })
 
@@ -41,7 +43,7 @@ module.exports = function(app, passport) {
                 }
             })
         }, function(err) {
-            console.log(err)
+            req.flash('error', err.message)
             res.redirect('back')
         })
     })

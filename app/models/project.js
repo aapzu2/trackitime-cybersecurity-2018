@@ -15,7 +15,7 @@ Project.prototype.findByUserAndId = function(id, user, successCallback, errorCal
         userId = user
     }
     this.client.first('' +
-        'SELECT "Project".* FROM "Project" ' +
+        'SELECT "Project".*, "UserProject".isAdmin as projectAdmin FROM "Project" ' +
         'INNER JOIN "UserProject" ON "Project".id = "UserProject".project ' +
         'WHERE "UserProject".project = $1 AND "UserProject".user = $2', [id, userId], successCallback, errorCallback)
 }

@@ -56,6 +56,8 @@ Instance.prototype.delete = function(instanceId, successCallback, errorCallback)
 }
 
 Instance.prototype.create = function(data, successCallback, errorCallback) {
+    var _this = this
+
     var e
     if(!data.project) {
         e = new Error('Instance needs a project')
@@ -69,7 +71,7 @@ Instance.prototype.create = function(data, successCallback, errorCallback) {
         else
             throw e
     } else {
-        this.client.first('SELECT * FROM "UserProject" WHERE user = $1', [data.user.id], function(row) {
+        this.client.first('SELECT * FROM "UserProject" WHERE "user" = $1', [data.user.id], function(row) {
             if(!row) {
                 var e = new Error('Invalid project')
                 if (errorCallback)
@@ -77,9 +79,9 @@ Instance.prototype.create = function(data, successCallback, errorCallback) {
                 else
                     throw e
             } else {
-                this.client.query('' +
+                _this.client.query('' +
                     'INSERT INTO "TimeInstance" ("description", "from", "to", "project", "user") ' +
-                    'VALUES ($1, $2, $3, $4, $5)', [data.description, data.from, data.to, data.project, data.user.id || data.user], successCallback, errorCallback)
+                    'VALUES ($1, $2, $3, $4, $5)', [data.description, data.from, data.to, data.project, data.user.id !== undefined ? data.user.id : data.user], successCallback, errorCallback)
             }
         })
     }
