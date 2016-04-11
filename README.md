@@ -10,3 +10,13 @@ Trackitime is my university's database/web-app practice work (University of Hels
 ### Useful links
 * <a href="https://trackitime.herokuapp.com" target="_blank">A running application in Heroku</a>
 * <a href="https://trackitime.herokuapp.com/documentation" target="_blank">The documentation of the app (PDF)</a>
+
+### How to use locally
+
+* `git clone https://github.com/Aapzu/trackitime`
+* Go to the cloned directory
+* Create a PostgreSQL database
+* Create the tables by running sql/create_tables.sql to the database
+* `npm install`
+* `DATABASE_URL=<FULL URL> [PORT=<PORT>] npm start` where \<FULL URL\> is the PostreSQL url containing host, port, username and password and \<PORT\> the port app starts in (optional, default 8080)
+* Go to [http://localhost:8080](http://localhost:8080) or http://localhost:\<PORT\>
