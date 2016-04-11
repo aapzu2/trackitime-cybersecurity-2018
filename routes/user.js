@@ -58,7 +58,7 @@ module.exports = function(app) {
     })
 
     app.post('/user/edit', function(req, res, next) {
-        User.edit(req.body)
+        User.editByAdmin(req.body)
             .then(function(row) {
                 req.flash('info', "User updated successfully!")
                 res.redirect('back')

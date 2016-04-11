@@ -111,11 +111,13 @@ User.prototype.editByAdmin = function(data) {
         constString += "name='" + name + "', "
 
         var isAdmin = data.isAdmin ? true : false
-        constString += "\"isAdmin\"='" + isAdmin + "' "
+        constString += '"isAdmin"="' + isAdmin + '" '
 
         client.query('' +
             'UPDATE "User" SET ' + constString + 'WHERE id = $1',
             [id])
+            .then(resolve)
+            .catch(reject)
     })
 }
 
