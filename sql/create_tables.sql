@@ -5,22 +5,26 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"password" TEXT NOT NULL,
 	"isAdmin" BOOLEAN DEFAULT false
 );
+
+CREATE TABLE IF NOT EXISTS "Project" (
+	"id" SERIAL PRIMARY KEY,
+	"name" TEXT NOT NULL CHECK ("name" <> ''),
+	"description" TEXT,
+	"started" DATE NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS "UserProject" (
-	"project" INTEGER REFERENCES "Project",
-	"user" INTEGER REFERENCES "User",
+	"project" INTEGER REFERENCES "public"."Project"("id"),
+	"user" INTEGER REFERENCES "public"."User"("id"),
 	"isAdmin" BOOLEAN DEFAULT true,
 	PRIMARY KEY("project", "user")
 );
-CREATE TABLE IF NOT EXISTS "Project" (
-  "id" SERIAL PRIMARY KEY,
-  "name" TEXT NOT NULL CHECK ("name" <> ''),
-  "description" TEXT,
-  "started" DATE NOT NULL
-);
+
 CREATE TABLE IF NOT EXISTS "TimeInstance" (
-  "id" SERIAL PRIMARY KEY,
-  "description" TEXT,
-  "from" TIMESTAMPTZ NOT NULL,
-  "to" TIMESTAMPTZ NOT NULL,
-  "project" INTEGER REFERENCES "project"
+	"id" SERIAL PRIMARY KEY,
+	"description" TEXT,
+	"from" TIMESTAMPTZ NOT NULL,
+	"to" TIMESTAMPTZ NOT NULL,
+	"project" INTEGER REFERENCES "public"."Project"("id"),
+	"user" INTEGER REFERENCES "public"."User"("id")
 );
