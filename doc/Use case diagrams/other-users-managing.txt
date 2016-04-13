@@ -1,0 +1,1 @@
+(note: Other users' managing{bg:seashell}), [Admin user]-(Create a new user), [Admin user]-(Delete a user), [Admin user]-(Edit a user), [Admin user]-(Give a user admin rights)

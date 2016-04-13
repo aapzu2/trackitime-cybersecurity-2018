@@ -1,5 +1,1 @@
-(note: Managing projects{bg:seashell})
-[Registered user]-(List projects)
-[Registered user]-(Create a project)
-[Registered user]-(Delete a project)
-[Registered user]-(See the stats of a project)
+(note: Managing projects{bg:seashell}), [Registered user]-(List projects), [Registered user]-(Create a project), [Registered user]-(Delete a project), [Registered user]-(See the stats of a project),[Registered user]-(Share project to another user)

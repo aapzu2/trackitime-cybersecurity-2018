@@ -1,8 +1,1 @@
-[Registered user]-(Log in)
-[Unregistered user]-(See the front page)
-[Registered user]-(See the front page)
-[Registered user]-(Manage projects)
-(Manage projects)>(Log in)
-[Registered user]-(Manage time instances)
-(Manage time instances)>(Log in)
-[Unregistered user]-(Sign up)
+[Unregistered user]-(Log in), [Unregistered user]-(See the front page), [Registered user]-(See the front page), [Registered user]-(Manage projects), [Registered user]-(Manage time instances), [Unregistered user]-(Sign up), [Registered user]-(Own Profile managing), [Admin user]-(Other users' managing), [Admin user]^[Registered user]

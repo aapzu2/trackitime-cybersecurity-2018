@@ -1,5 +1,1 @@
-(note: Managing time instances{bg:seashell}) 
-[Registered user]-(Add a new time instance to a project) 
-[Registered user]-(Delete a time instance from a project) 
-[Registered user]-(Edit the data of a existing time instance)
-
+(note: Managing time instances{bg:seashell}), [Registered user]-(Add a new time instance to a project), [Registered user]-(Delete own time instance from the project), [Registered user]-(Edit the data of own time instance), [Project admin]^[Registered user], [Project admin]-(Delete anyones time instance from the project), [Project admin]-(Edit the data of anyones time instance)
