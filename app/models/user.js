@@ -1,97 +1,124 @@
+"use strict";
+
 var bcrypt = require('bcrypt-nodejs')
+var client = require('../db-client')
 
-function User() {
-    this.client = require('../db-client')
+function User() {}
+
+User.prototype.findById = function(id) {
+    return new Promise(function(resolve, reject) {
+        client.first('' +
+            'SELECT * FROM "User" WHERE id = $1',
+            [id])
+            .then(resolve)
+            .catch(reject)
+    })
+
 }
 
-User.prototype.findById = function(id, successCallback, errorCallback) {
-    this.client.first('SELECT * FROM "User" WHERE id = $1', [id], successCallback, errorCallback)
+User.prototype.findByUsername = function(username) {
+    return new Promise(function(resolve, reject) {
+        client.first('' +
+            'SELECT * FROM "User" WHERE username = $1',
+            [username])
+            .then(resolve)
+            .catch(reject)
+    })
 }
 
-User.prototype.findByUsername = function(username, successCallback, errorCallback) {
-    this.client.first('SELECT * FROM "User" WHERE username = $1', [username], successCallback, errorCallback)
+User.prototype.findAll = function() {
+    return new Promise(function(resolve, reject) {
+        client.query('SELECT * FROM "User"')
+            .then(resolve)
+            .catch(reject)
+    })
 }
 
-User.prototype.findAll = function(successCallback, errorCallback) {
-    this.client.query('SELECT * FROM "User"', [], successCallback, errorCallback)
+User.prototype.create = function(data) {
+    return new Promise(function(resolve, reject) {
+        if(data.password != data.password2) {
+            reject(new Error("Passwords don't match!"))
+        }
+        else if(!data.username) {
+            reject(new Error("Username cannot be empty!"))
+        } else {
+            var hashedPassword = bcrypt.hashSync(data.password, null, null)
+            client.first('' +
+                'INSERT INTO "User" (name, username, password) values ($1, $2, $3) RETURNING id',
+                [data.name, data.username, hashedPassword])
+                .then(resolve)
+                .catch(reject)
+        }
+
+    })
 }
 
-User.prototype.create = function(data, successCallback, errorCallback) {
-    if(data.password != data.password2) {
-        var err = new Error("Passwords don't match!")
-        if(errorCallback)
-            errorCallback(err)
-        else
-            throw err
-    } else {
-        var hashedPassword = bcrypt.hashSync(data.password, null, null)
-        this.client.first('INSERT INTO "User" (name, username, password) values ($1, $2, $3) RETURNING id',
-            [data.name, data.username, hashedPassword], successCallback, errorCallback)
-    }
+User.prototype.delete = function(id) {
+    return new Promise(function(resolve, reject) {
+        client.query('' +
+            'DELETE FROM "User" WHERE id = $1',
+            [id])
+            .then(resolve)
+            .catch(reject)
+    })
 }
 
-User.prototype.delete = function(id, successCallback, errorCallback) {
-    this.client.query('DELETE FROM "User" WHERE id = $1', [id], successCallback, errorCallback)
-}
-
-User.prototype.edit = function(data, successCallback, errorCallback) {
+User.prototype.edit = function(data) {
     var _this = this
+    return new Promise(function(resolve, reject) {
+        var constString = ""
+        var id = data.id
+        var name = data.name
+        var oldPwd = data.oldPassword
+        var pwd = data.password
+        var pwd2 = data.password2
 
-    var constString = ""
-    var username = data.username
-    var name = data.name
-    var oldPwd = data.oldPassword
-    var pwd = data.password
-    var pwd2 = data.password2
+        var err
+        _this.findById(id)
+            .then(function(user) {
+                if(pwd || oldPwd) {
+                    if (!bcrypt.compareSync(oldPwd, user.password))
+                        reject(new Error("Wrong old password"))
+                    else if(pwd != pwd2)
+                        reject(new Error("Passwords don't match!"))
+                    var hashedPassword = bcrypt.hashSync(data.password, null, null)
 
-    var err
-    this.findByUsername(username, function(row) {
-        if(pwd || oldPwd) {
-            if (!bcrypt.compareSync(oldPwd, row.password))
-                err = new Error("Wrong old password")
-            else if(pwd != pwd2)
-                err = new Error("Passwords don't match!")
+                    constString += "password='" + hashedPassword + "', "
+                }
+                constString += "name='" + name + "'"
+                client.query('' +
+                    'UPDATE "User" SET ' + constString + 'WHERE "id" = $1',
+                    [id])
+                    .then(resolve)
+                    .catch(reject)
+            })
+            .catch(reject)
+    })
+}
 
+User.prototype.editByAdmin = function(data) {
+    return new Promise(function(resolve, reject) {
+        var constString = ""
+        var id = data.id
+
+        var pwd = data.password
+        if (pwd) {
             var hashedPassword = bcrypt.hashSync(data.password, null, null)
             constString += "password='" + hashedPassword + "', "
         }
-        if(err) {
-            handleError(err)
-        } else {
-            constString += "name='" + name + "'"
-            _this.client.query('UPDATE "User" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
-        }
 
-    }, function(err) {
-        handleError(err)
+        var name = data.name
+        constString += "name='" + name + "', "
+
+        var isAdmin = data.isAdmin ? true : false
+        constString += '"isAdmin"="' + isAdmin + '" '
+
+        client.query('' +
+            'UPDATE "User" SET ' + constString + 'WHERE id = $1',
+            [id])
+            .then(resolve)
+            .catch(reject)
     })
-
-    var handleError= function(err) {
-        if (errorCallback) {
-            errorCallback(err)
-        } else
-            throw err
-    }
-}
-
-User.prototype.editByAdmin = function(data, successCallback, errorCallback) {
-    var constString = ""
-    var username = data.username
-    var name = data.name
-    var pwd = data.password
-    var isAdmin = data.isAdmin ? true : false
-
-    if(pwd) {
-        var hashedPassword = bcrypt.hashSync(data.password, null, null)
-        constString += "password='" + hashedPassword + "', "
-    }
-    constString += "name='" + name + "', "
-    constString += "\"isAdmin\"='" + isAdmin + "' "
-    this.client.query('UPDATE "User" SET ' + constString + 'WHERE "username" = $1', [username], successCallback, errorCallback)
-}
-
-User.prototype.editField = function(field, value, username, successCallback, errorCallback) {
-    this.client.first('UPDATE "' + field + '" = $1 WHERE "username" = $2', [value, username], successCallback, errorCallback)
 }
 
 module.exports = new User()
