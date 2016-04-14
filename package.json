@@ -23,5 +23,11 @@
     "express-session": "*",
     "fs": "*",
     "moment": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "node-mocks-http": "^1.5.2",
+    "proxyquire": "*",
+    "assert": "*"
   }
 }

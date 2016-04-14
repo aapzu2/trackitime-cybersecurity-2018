@@ -1,13 +1,14 @@
 "use strict";
-function DBClient() {
-    var pg = require('pg')
 
-    pg.defaults.ssl = true
- 
+var pg = require('pg')
+
+function DBClient() {
     var host = process.env.DATABASE_URL
 
     if(!host)
-        throw "No DATABASE_URL!"
+        throw new Error("No DATABASE_URL!")
+    
+    pg.defaults.ssl = true
 
     this.client = new pg.Client(host)
     this.client.connect(function(err) {
