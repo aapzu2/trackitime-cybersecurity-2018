@@ -40,7 +40,7 @@
                         Started
                     </label>
                     <div>
-                        <span class="moment-date"><%= data.project.started %></span>
+                        <%= moment(data.project.started).format('DD.MM.YYYY') %>
                     </div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
     <div class="col-md-12 col-lg-6">
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Instances</h3>
+                <h3 class="box-title"><a href="/instance/list?project=<%= data.project.id %>">Instances</a></h3>
             </div>
             <div class="box-body">
                 <table class="table">

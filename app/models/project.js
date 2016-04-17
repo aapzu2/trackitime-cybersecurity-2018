@@ -15,7 +15,7 @@ Project.prototype.findById = function(id) {
 Project.prototype.findByUserAndId = function(id, user) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT "Project".*, "UserProject"."isAdmin" as projectAdmin FROM "Project" ' +
+            'SELECT "Project".*, "UserProject"."isAdmin" as "isProjectAdmin" FROM "Project" ' +
             'INNER JOIN "UserProject" ON "Project".id = "UserProject".project ' +
             'WHERE "UserProject".project = $1 AND "UserProject".user = $2',
             [id, user.id !== undefined ? user.id : user])
@@ -27,7 +27,7 @@ Project.prototype.findByUserAndId = function(id, user) {
 Project.prototype.findAllByUser = function(user) {
     return new Promise(function(resolve, reject) {
         client.query('' +
-            'SELECT "Project".* FROM "Project" ' +
+            'SELECT "Project".*, "UserProject"."isAdmin" as "isProjectAdmin" FROM "Project" ' +
             'INNER JOIN "UserProject" ON "Project".id = "UserProject".project ' +
             'WHERE "UserProject".user = $1', [user.id !== undefined ? user.id : user])
             .then(resolve)

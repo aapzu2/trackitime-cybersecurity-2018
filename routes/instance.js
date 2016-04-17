@@ -36,21 +36,62 @@ module.exports = function(app, passport) {
     })
 
     app.get('/instance/list', function(req, res, next) {
-        Instance.findAllByUser(req.user)
-            .then(function(instances) {
-                res.render('main.tmpl', {
-                    view: 'instance/instance-list',
-                    title: "Your timeline",
-                    data: {
-                        user: req.user,
-                        instances: instances
+        if(req.params.project) {
+            Instance.findAllByProjectAndUser(req.params.project, req.user)
+                .then(success)
+                .catch(error)
+        } else {
+            Instance.findAllByUser(req.user)
+                .then(success)
+                .catch(error)
+        }
+        function success(instances) {
+            res.render('main.tmpl', {
+                view: 'instance/instance-list',
+                title: "Instances",
+                data: {
+                    user: req.user,
+                    instances: instances,
+                    project: req.params.project !== undefined ? {
+                        id: instances[0].project,
+                        name: instances[0].projectname
+                    } : undefined
+                }
+            })
+        }
+        function error(err) {
+            req.flash('error', err.message)
+            res.redirect('back')
+        }
+    })
+    
+    app.post('/instance/delete', function(req, res, next) {
+        function errorHandler(err) {
+            req.flash('error', err.message)
+            res.redirect('back')
+        }
+        function successHandler() {
+            req.flash('info', "Instance deleted succesfully!")
+            res.redirect("back")
+        }
+        Instance.findByIdAndUser(req.body.id, req.user)
+            .then(function(instance) {
+                if(instance) {
+                    if(instance.isProjectAdmin) {
+                        Instance.deleteByProjectAdmin(instance.id, req.user)
+                            .then(successHandler)
+                            .catch(errorHandler)
+                    } else if(instance.user === req.user.id) {
+                        Instance.deleteByProjectMember(instance.id, req.user)
+                            .then(successHandler)
+                            .catch(errorHandler)
                     }
-                })
+                } else {
+                    res.statusCode = 404
+                    res.send("Not found")
+                }
             })
-            .catch(function(err) {
-                req.flash('error', err.message)
-                res.redirect('back')
-            })
+            .catch(errorHandler)
     })
 
     return this

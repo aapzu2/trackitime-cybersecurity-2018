@@ -21,8 +21,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(__dirname + '/public'))
 
-var db = require('./config/database')
-require('./config/passport')(passport, db); // pass passport for configuration
+var dbClient = require('./app/db-client')
+require('./config/passport')(passport); // pass passport for configuration
 
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -40,6 +40,12 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session()) // persistent login sessions
 
+// Pass moment.js to every template for date formatting
+app.use(function(req, res, next){
+    res.locals.moment = require('moment');
+    next();
+})
+
 require('./routes/index')(app)
 require('./routes/documentation')(app)
 require('./routes/login')(app, passport)
@@ -55,6 +61,7 @@ app.all('*', authenticateUser.isLoggedIn)
 require('./routes/profile')(app)
 require('./routes/project')(app)
 require('./routes/instance')(app)
+require('./routes/timeline')(app)
 
 // After this the request require admin rights
 app.all('*', authenticateUser.isAdmin)

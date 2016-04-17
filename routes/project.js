@@ -21,6 +21,10 @@ module.exports = function(app) {
                     }
                 })
             })
+            .catch(function(err) {
+                req.flash('error', err.message)
+                res.redirect('back')
+            })
     })
 
     app.get('/project/create', function(req, res, next) {

@@ -1,0 +1,44 @@
+
+<section class="content-header">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="/timeline">Timeline</a></li>
+    </ol>
+</section>
+<section class="content">
+    <div class="col-lg-8 col-lg-offset-2 col-md-6 col-md-offset-3">
+        <ul class="timeline">
+            <% var lastDate = undefined %>
+            <% _.each(data.instances, function(instance) { %>
+                <% if(instance.from != lastDate) { %>
+                    <% lastDate = instance.from %>
+                    <li class="time-label">
+                        <span class="bg-red">
+                            <%= moment(instance.from).format('DD.MM.YYYY') %>
+                        </span>
+                    </li>
+                <% } %>
+                <li>
+                    <i class="fa fa-user bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> <%= moment(instance.from).format('HH:mm') %> - <%= moment(instance.to).format('HH:mm') %></span>
+
+                        <h3 class="timeline-header">
+                            <a href="/project/show/<%= instance.projectid %>">
+                                <%= instance.projectname %>
+                            </a>
+                            <% console.log(instance.userid, data.user.id) %>
+                            <% if(instance.userid != data.user.id) { %>
+                                by <span class="text-capitalize"><%= instance.username %></span>
+                            <% } %>
+                        </h3>
+
+                        <div class="timeline-body">
+                            <%= instance.description %>
+                        </div>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+</section>
