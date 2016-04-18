@@ -20,7 +20,7 @@ Instance.prototype.findByIdAndUser = function(id, user) {
             'FROM "TimeInstance" t ' +
             'JOIN "Project" p ON p.id = t.project ' +
             'JOIN "UserProject" up ON up.project = p.id ' +
-            'WHERE t.id = $1 AND (t.user = $2 OR up."isAdmin" = true)',
+            'WHERE t.id = $1 AND t.user = $2',
             [id, user.id !== undefined ? user.id : user])
             .then(resolve)
             .catch(reject)
@@ -34,7 +34,7 @@ Instance.prototype.findAllByUser = function(user) {
             'p.id AS "projectId", p.name AS "projectName", ' +
             'u.id AS "userId", u.name AS "userName", u.username AS "userUsername", ' +
             'i.id, i.description, i.from, i.to, ' +
-            'up."isAdmin" AS isProjectAdmin ' +
+            'up."isAdmin" AS "isProjectAdmin" ' +
             'FROM "UserProject" up ' +
             'JOIN "Project" p ON up.project = p.id ' +
             'JOIN "TimeInstance" i ON p.id = i.project ' +
@@ -49,7 +49,7 @@ Instance.prototype.findAllByUser = function(user) {
 Instance.prototype.findAllByProjectAndUser = function(project, user) {
     return new Promise(function(resolve, reject) {
         client.query('' +
-            'SELECT t.*, p.name AS "projectName", up."isAdmin" AS "isProjectAdmin" ' +
+            'SELECT t.*, p.name AS "projectName", up."isAdmin" AS "isProjectAdmin", u."username" AS "userUsername", u.id AS "userId" ' +
             'FROM "TimeInstance" t ' +
             'JOIN "UserProject" up ON t.project = up.project ' +
             'JOIN "Project" p on t.project = p.id ' +

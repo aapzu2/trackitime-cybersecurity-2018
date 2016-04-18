@@ -12,7 +12,7 @@ Project.prototype.findById = function(id) {
     })
 }
 
-Project.prototype.findByUserAndId = function(id, user) {
+Project.prototype.findByUserAndId = function(user, id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
             'SELECT "Project".*, "UserProject"."isAdmin" as "isProjectAdmin" FROM "Project" ' +
@@ -146,6 +146,30 @@ Project.prototype.findOwnersByProject = function(project) {
             'WHERE "UserProject".project = $1',
             [project.id !== undefined ? project.id : project])
             .then(resolve)
+            .catch(reject)
+    })
+}
+
+Project.prototype.edit = function(data) {
+    var _this = this
+    return new Promise(function(resolve, reject) {
+        if(!data.name)
+            reject(new Error("Project name cannot be empty!"))
+        _this.findByUserAndId(data.user, data.id)
+            .then(function(project) {
+                if(!project || !project.isProjectAdmin)
+                    reject(new Error("Not authorized to edit!"))
+                else {
+                    client.query('' +
+                        'UPDATE "Project" ' +
+                        'SET "name" = $1, "description" = $2, "started" = $3 ' +
+                        'WHERE "id" = $4 ' +
+                        'RETURNING "id"',
+                        [data.name, data.description, data.started, data.id])
+                        .then(resolve)
+                        .catch(reject)
+                }
+            })
             .catch(reject)
     })
 }

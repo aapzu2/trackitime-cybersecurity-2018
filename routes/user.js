@@ -48,10 +48,10 @@ module.exports = function(app) {
             .then(function(foundUser) {
                 res.render('main.tmpl', {
                     view: 'user/user-edit',
-                    title: "Edit foundUser.username",
+                    title: "Edit " + foundUser.username,
                     data: {
                         user: req.user,
-                        editableUser: foundUser
+                        foundUser: foundUser
                     }
                 })
             })

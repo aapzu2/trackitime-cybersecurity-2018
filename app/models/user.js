@@ -8,7 +8,7 @@ function User() {}
 User.prototype.findById = function(id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT * FROM "User" WHERE id = $1',
+            'SELECT id, username, name, "isAdmin" FROM "User" WHERE id = $1',
             [id])
             .then(resolve)
             .catch(reject)
@@ -17,6 +17,16 @@ User.prototype.findById = function(id) {
 }
 
 User.prototype.findByUsername = function(username) {
+    return new Promise(function(resolve, reject) {
+        client.first('' +
+            'SELECT id, username, name, "isAdmin" FROM "User" WHERE username = $1',
+            [username])
+            .then(resolve)
+            .catch(reject)
+    })
+}
+
+User.prototype.findWithPasswordByUsername = function(username) {
     return new Promise(function(resolve, reject) {
         client.first('' +
             'SELECT * FROM "User" WHERE username = $1',
@@ -28,7 +38,7 @@ User.prototype.findByUsername = function(username) {
 
 User.prototype.findAll = function() {
     return new Promise(function(resolve, reject) {
-        client.query('SELECT * FROM "User"')
+        client.query('SELECT id, username, name, "isAdmin" FROM "User"')
             .then(resolve)
             .catch(reject)
     })
@@ -111,7 +121,7 @@ User.prototype.editByAdmin = function(data) {
         constString += "name='" + name + "', "
 
         var isAdmin = data.isAdmin ? true : false
-        constString += '"isAdmin"="' + isAdmin + '" '
+        constString += "\"isAdmin\"='" + isAdmin + "' "
 
         client.query('' +
             'UPDATE "User" SET ' + constString + 'WHERE id = $1',

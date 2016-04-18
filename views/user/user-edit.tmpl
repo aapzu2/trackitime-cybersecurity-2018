@@ -12,15 +12,16 @@
                 <span class="box-title">Edit the user</span>
             </div>
             <form class="no-margin" action="/user/edit" method="post">
+                <input type="hidden" name="id" value="<%= data.foundUser.id %>">
                 <div class="box-body">
                     <div class="form-group">
                         <label for="userNameInput">Username</label>
-                        <input type="text" class="form-control" id="userNameInput" disabled title="The username cannot be changed" value="<%= data.editableUser.username %>">
+                        <input type="text" class="form-control" id="userNameInput" disabled title="The username cannot be changed" value="<%= data.foundUser.username %>">
                     </div>
-                    <input type="hidden" name="username" value="<%= data.editableUser.username %>">
+                    <input type="hidden" name="username" value="<%= data.foundUser.username %>">
                     <div class="form-group">
                         <label for="nameInput">Full Name</label>
-                        <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.editableUser.name %>">
+                        <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.foundUser.name %>">
                     </div>
                     <div class="form-group">
                         <label for="newPasswordInput">Password</label>
@@ -30,7 +31,7 @@
                         <div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="isAdmin" <%= data.editableUser.isAdmin ? 'checked' : '' %>> Admin rights?
+                                    <input type="checkbox" name="isAdmin" <%= data.foundUser.isAdmin ? 'checked' : '' %>> Admin rights?
                                 </label>
                             </div>
                         </div>
@@ -52,7 +53,7 @@
 <div class="modal modal-danger fade" id="userDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <form action="/user/delete" method="post" class="no-margin">
-            <input type="hidden" name="id" value="<%= data.editableUser.id %>"></input>
+            <input type="hidden" name="id" value="<%= data.foundUser.id %>"></input>
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

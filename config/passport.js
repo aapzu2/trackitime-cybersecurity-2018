@@ -60,14 +60,18 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req, username, password, done) { // callback with email and password from our form
-            User.findByUsername(username)
+            User.findWithPasswordByUsername(username)
                 .then(function(user) {
                     if (!user || !bcrypt.compareSync(password, user.password)) {
                         return done(null, false, req.flash('error', 'Username or password incorrect')); // req.flash is the way to set flashdata using connect-flash
                     }
                     // all is well, return successful user
                     console.log(user.name + ' (' + user.username + ') logged in!')
-                    return done(null, user);
+                    return done(null, {
+                        name: user.name,
+                        username: user.username,
+                        id: user.id
+                    });
                 })
                 .catch(function(err) {
                     return done(null, false, req.flash('info', err.message))

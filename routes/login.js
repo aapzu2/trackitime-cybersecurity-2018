@@ -12,6 +12,7 @@ module.exports = function(app, passport) {
         }), function(req, res) {
             if(req.session.returnUrl) {
                 res.redirect(req.session.returnUrl)
+                req.session.returnUrl = undefined
             } else {
                 res.redirect('/')
             }

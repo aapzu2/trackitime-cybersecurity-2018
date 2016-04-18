@@ -14,9 +14,11 @@
         <div class="box box-solid">
             <div class="box-header with-border">
                 <h3 class="box-title">Info</h3>
-                <div class="box-tools">
-                    <a href="/project/edit/<%= data.project.id %>" class="fa fa-pencil"></a>
-                </div>
+                <% if(data.project.isProjectAdmin) { %>
+                    <div class="box-tools">
+                        <a href="/project/edit/<%= data.project.id %>" class="fa fa-pencil"></a>
+                    </div>
+                <% } %>
             </div>
             <div class="box-body">
                 <div class="form-group ">
@@ -84,7 +86,9 @@
                 <% } else { %>
                     <span>Not shared to anyone!</span>
                 <% } %>
-                <a class="btn btn-primary btn-sm pull-right" href="/project/share/<%= data.project.id %>">Share</a>
+                <% if(data.project.isProjectAdmin) { %>
+                    <a class="btn btn-primary btn-sm pull-right" href="/project/share/<%= data.project.id %>">Share</a>
+                <% } %>
             </div>
         </div>
     </div>
@@ -112,13 +116,15 @@
                             <th>Description</th>
                         </tr>
                     </thead>
-                    <% _.each(data.instances, function(instance) { %>
-                        <tr>
-                            <td><span class="moment-date"><%= instance.from %></span></td>
-                            <td><%= instance.duration %></td>
-                            <td><%= instance.description %></td>
-                        </tr>
-                    <% }) %>
+                    <tbody>
+                        <% _.each(data.instances, function(instance) { %>
+                            <tr>
+                                <td><span class="moment-date"><%= instance.from %></span></td>
+                                <td><%= instance.duration %></td>
+                                <td><%= instance.description %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
                 </table>
             </div>
         </div>

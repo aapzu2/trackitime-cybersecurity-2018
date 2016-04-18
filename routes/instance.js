@@ -36,8 +36,8 @@ module.exports = function(app, passport) {
     })
 
     app.get('/instance/list', function(req, res, next) {
-        if(req.params.project) {
-            Instance.findAllByProjectAndUser(req.params.project, req.user)
+        if(req.query.project) {
+            Instance.findAllByProjectAndUser(req.query.project, req.user)
                 .then(success)
                 .catch(error)
         } else {
