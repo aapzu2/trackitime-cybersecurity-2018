@@ -112,13 +112,6 @@ module.exports = function(app) {
                     return
                 }
 
-                var total = 0
-                instances.forEach(function (instance) {
-                    var dur = moment(instance.to).diff(moment(instance.from))
-                    instance.duration = moment.duration(dur).humanize()
-                    total += moment(instance.to).diff(moment(instance.from))
-                })
-
                 res.render('main.tmpl', {
                     view: 'project/project-show',
                     title: project.name,
@@ -126,8 +119,7 @@ module.exports = function(app) {
                         user: req.user,
                         owners: owners,
                         project: project,
-                        instances: instances,
-                        totalUsed: moment.duration(total).humanize()
+                        instances: instances
                     }
                 })
             })

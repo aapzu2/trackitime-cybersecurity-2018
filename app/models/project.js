@@ -15,9 +15,15 @@ Project.prototype.findById = function(id) {
 Project.prototype.findByUserAndId = function(user, id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT "Project".*, "UserProject"."isAdmin" as "isProjectAdmin" FROM "Project" ' +
-            'INNER JOIN "UserProject" ON "Project".id = "UserProject".project ' +
-            'WHERE "UserProject".project = $1 AND "UserProject".user = $2',
+            'SELECT p.*, up."isAdmin" as "isProjectAdmin" ' +
+            'FROM (' +
+                'SELECT p.*, SUM(t.to - t.from) as "totalTimeUsed" ' +
+                'FROM"Project" p ' +
+                'LEFT JOIN "TimeInstance" t ON t.project = p.id ' +
+                'GROUP BY p.id' +
+            ') p ' +
+            'JOIN "UserProject" up ON p.id = up.project ' +
+            'WHERE p.id = $1 AND up.user = $2 ',
             [id, user.id !== undefined ? user.id : user])
             .then(resolve)
             .catch(reject)
@@ -27,9 +33,16 @@ Project.prototype.findByUserAndId = function(user, id) {
 Project.prototype.findAllByUser = function(user) {
     return new Promise(function(resolve, reject) {
         client.query('' +
-            'SELECT "Project".*, "UserProject"."isAdmin" as "isProjectAdmin" FROM "Project" ' +
-            'INNER JOIN "UserProject" ON "Project".id = "UserProject".project ' +
-            'WHERE "UserProject".user = $1', [user.id !== undefined ? user.id : user])
+            'SELECT p.*, up."isAdmin" as "isProjectAdmin" ' +
+            'FROM (' +
+                'SELECT p.*, SUM(t.to - t.from) as "totalTimeUsed" ' +
+                'FROM"Project" p ' +
+                'LEFT JOIN "TimeInstance" t ON t.project = p.id ' +
+                'GROUP BY p.id' +
+            ') p ' +
+            'JOIN "UserProject" up ON p.id = up.project ' +
+            'WHERE up.user = $1',
+            [user.id !== undefined ? user.id : user])
             .then(resolve)
             .catch(reject)
     })

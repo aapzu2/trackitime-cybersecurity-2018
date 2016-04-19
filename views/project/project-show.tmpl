@@ -98,7 +98,7 @@
                 <h3 class="box-title">Time Used</h3>
             </div>
             <div class="box-body text-center">
-                <h3><%= data.totalUsed %></h3>
+                <h3><%= moment.duration(data.project.totalTimeUsed).humanize() %></h3>
             </div>
         </div>
     </div>
