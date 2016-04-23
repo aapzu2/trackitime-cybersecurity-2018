@@ -5,7 +5,7 @@ var bcrypt = require('bcrypt-nodejs');
 
 module.exports = function(passport) {
 
-    var User = require('../app/models/user')
+    var User = require('../models/user')
 
     // used to serialize the user for the session
     passport.serializeUser(function(user, done) {

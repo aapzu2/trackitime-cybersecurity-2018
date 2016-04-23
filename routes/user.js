@@ -1,7 +1,7 @@
 
 module.exports = function(app) {
 
-    var User = require('../app/models/user')
+    var User = require('../models/user')
 
     app.get('/user', function(req, res, next) {
         res.redirect('/user/list')

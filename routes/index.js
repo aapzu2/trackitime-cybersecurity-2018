@@ -1,6 +1,6 @@
 
 module.exports = function(app) {
-    var Project = require('../app/models/project')
+    var Project = require('../models/project')
 
     app.get('/', function(req, res) {
         function render(projects) {

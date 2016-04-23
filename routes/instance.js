@@ -2,8 +2,8 @@
 module.exports = function(app, passport) {
     var moment = require('moment')
 
-    var Project = require('../app/models/project')
-    var Instance = require('../app/models/instance');
+    var Project = require('../models/project')
+    var Instance = require('../models/instance');
 
     app.get('/instance/create', function(req, res) {
         var p = req.params.project

@@ -1,7 +1,7 @@
 
 module.exports = function(app) {
 
-    var Instance = require('../app/models/instance');
+    var Instance = require('../models/instance');
 
     app.get('/timeline', function(req, res, next) {
         Instance.findAllByUser(req.user)

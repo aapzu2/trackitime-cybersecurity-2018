@@ -1,6 +1,6 @@
 "use strict";
 
-var User = require('../app/models/user')
+var User = require('../models/user')
 var bcrypt = require('bcrypt-nodejs')
 
 module.exports = function(app, passport) {
