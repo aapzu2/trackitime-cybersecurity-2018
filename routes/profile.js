@@ -29,8 +29,9 @@ module.exports = function(app, passport) {
 
     app.post('/profile/delete', function(req, res, next) {
         var errorHandler = function(err) {
+            console.log(err)
             req.flash('error', err.message)
-            res.redirect('/profile')
+            res.redirect('/profile/edit')
         }
         User.findById(req.user.id)
             .then(function(user) {
