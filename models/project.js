@@ -1,6 +1,6 @@
 "use strict";
 
-var client = require('../db-client')
+var client = require('../app/db-client')
 
 function Project() {}
 

@@ -1,7 +1,7 @@
 "use strict";
 
 var bcrypt = require('bcrypt-nodejs')
-var client = require('../db-client')
+var client = require('../app/db-client')
 
 function User() {}
 

@@ -1,13 +1,15 @@
 "use strict";
 
 var Project = require('./project')
-var client = require('../db-client')
+var client = require('../app/db-client')
 
 function Instance() {}
 
 Instance.prototype.findById = function(id) {
     return new Promise(function(resolve, reject) {
-        client.first('SELECT * FROM "TimeInstance" WHERE id = $1', [id])
+        client.first('' +
+            'SELECT * FROM "TimeInstance" WHERE id = $1',
+            [id])
             .then(resolve)
             .catch(reject)
     })
