@@ -21,15 +21,16 @@
                 <li>
                     <i class="fa fa-user bg-blue"></i>
                     <div class="timeline-item">
-                        <span class="time"><i class="fa fa-clock-o"></i> <%= moment(instance.from).format('HH:mm') %> - <%= moment(instance.to).format('HH:mm') %></span>
+                        <span class="time">
+                            <i class="fa fa-clock-o"></i> <%= moment(instance.from).format('HH:mm') %> - <%= moment(instance.to).format('HH:mm') %>
+                        </span>
 
                         <h3 class="timeline-header">
                             <a href="/project/show/<%= instance.projectid %>">
-                                <%= instance.projectname %>
+                                <%= instance.projectName %>
                             </a>
-                            <% console.log(instance.userid, data.user.id) %>
-                            <% if(instance.userid != data.user.id) { %>
-                                by <span class="text-capitalize"><%= instance.username %></span>
+                            <% if(instance.userId != data.user.id) { %>
+                                by <span class="text-capitalize"><%= instance.userUsername %></span>
                             <% } %>
                         </h3>
 
