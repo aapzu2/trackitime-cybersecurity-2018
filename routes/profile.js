@@ -33,7 +33,7 @@ module.exports = function(app, passport) {
             req.flash('error', err.message)
             res.redirect('/profile/edit')
         }
-        User.findById(req.user.id)
+        User.findWithPasswordById(req.user.id)
             .then(function(user) {
                 if(!user)
                     throw "No user found!"
@@ -43,15 +43,14 @@ module.exports = function(app, passport) {
 
                 if (!bcrypt.compareSync(password, user.password)) {
                     req.flash('info', err.body)
-                    res.reload()
+                    res.redirect('back')
                 } else {
                     User.delete(id)
                         .then(function() {
-                            req.flash('info', 'User ' + user.username + ' deleted succesfully')
                             req.session.destroy(function(err) {
                                 console.error(err)
                             })
-                            res.redirect('/logout')
+                            res.redirect('/')
                         })
                         .catch(errorHandler)
                 }

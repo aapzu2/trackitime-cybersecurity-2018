@@ -36,6 +36,16 @@ User.prototype.findWithPasswordByUsername = function(username) {
     })
 }
 
+User.prototype.findWithPasswordById= function(id) {
+    return new Promise(function(resolve, reject) {
+        client.first('' +
+            'SELECT * FROM "User" WHERE id = $1',
+            [id])
+            .then(resolve)
+            .catch(reject)
+    })
+}
+
 User.prototype.findAll = function() {
     return new Promise(function(resolve, reject) {
         client.query('SELECT id, username, name, "isAdmin" FROM "User"')
