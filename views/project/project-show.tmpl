@@ -14,11 +14,9 @@
         <div class="box box-solid">
             <div class="box-header with-border">
                 <h3 class="box-title">Info</h3>
-                <% if(data.project.isProjectAdmin) { %>
-                    <div class="box-tools">
-                        <a href="/project/edit/<%= data.project.id %>" class="fa fa-pencil"></a>
-                    </div>
-                <% } %>
+                <div class="box-tools">
+                    <a href="/project/edit/<%= data.project.id %>" class="fa fa-bars"></a>
+                </div>
             </div>
             <div class="box-body">
                 <div class="form-group ">

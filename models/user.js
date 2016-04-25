@@ -3,6 +3,8 @@
 var bcrypt = require('bcrypt-nodejs')
 var client = require('../app/db-client')
 
+var Project = require("./project")
+
 function User() {}
 
 User.prototype.findById = function(id) {
@@ -75,10 +77,30 @@ User.prototype.create = function(data) {
 
 User.prototype.delete = function(id) {
     return new Promise(function(resolve, reject) {
-        client.query('' +
-            'DELETE FROM "User" WHERE id = $1',
-            [id])
-            .then(resolve)
+        Project.findAllByUser(id)
+            .then(function(projects) {
+                if(!projects.length)
+                    final()
+                var deleted = 0
+                projects.forEach(function(p) {
+                    Project.deleteFromUser(p.id, id)
+                        .then(function() {
+                            if(deleted < projects.length - 1) {
+                                deleted++
+                            } else {
+                                final()
+                            }
+                        })
+                        .catch(reject)
+                })
+                function final() {
+                    client.query('' +
+                            'DELETE FROM "User" WHERE id = $1',
+                        [id])
+                        .then(resolve)
+                        .catch(reject)
+                }
+            })
             .catch(reject)
     })
 }

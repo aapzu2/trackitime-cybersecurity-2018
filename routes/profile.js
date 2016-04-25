@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
                 var password = req.body.password
 
                 if (!bcrypt.compareSync(password, user.password)) {
-                    req.flash('info', err.body)
+                    req.flash('error', "Incorrect password")
                     res.redirect('back')
                 } else {
                     User.delete(id)
@@ -56,7 +56,6 @@ module.exports = function(app, passport) {
                 }
             })
             .catch(errorHandler)
-
     })
 
     return this

@@ -44,9 +44,9 @@ module.exports = function(app) {
             started: req.body.started,
             user: req.user.id
         })
-            .then(function(rows) {
+            .then(function(row) {
                 req.flash('info', "Project created successfully! You can now start creating instances to it.")
-                res.redirect('/project/show/' + rows[0].id)
+                res.redirect('/project/show/' + row.id)
             })
             .catch(function(err) {
                 req.flash('error', err.message)

@@ -71,7 +71,7 @@ Project.prototype.create = function(data) {
                 client.first('' +
                     'INSERT INTO "UserProject" ("user", "project", "isAdmin") ' +
                     'VALUES ($1, $2, $3) RETURNING project AS id',
-                    [data.user.id !== undefined ? data.user.id : data.user, project.id, data.isAdmin ? true : false])
+                    [data.user.id !== undefined ? data.user.id : data.user, project.id, data.isAdmin ? data.isAdmin : true])
                     .then(resolve)
                     .catch(reject)
             })
@@ -132,15 +132,23 @@ Project.prototype.deleteFromUser = function(project, user) {
     return new Promise(function(resolve, reject) {
         var userId = user.id !== undefined ? user.id : user
         var projectId = project.id !== undefined ? project.id : project
-        client.query('' +
-            'SELECT * FROM "UserProject" WHERE project = $1', [projectId])
-            .then(function(userProjects) {
-                client.query('DELETE FROM "UserProject" WHERE user = $1 AND project = $2', [userId, projectId])
-                    .then(function() {
+        client.query('DELETE FROM "UserProject" WHERE "user" = $1 AND "project" = $2 RETURNING "project", "user", "isAdmin"', [userId, projectId])
+            .then(function(up) {
+                client.query('' +
+                    'SELECT * FROM "UserProject" WHERE project = $1', [projectId])
+                    .then(function(userProjects) {
                         // If was the only one
-                        if(userProjects.length == 1) {
+                        if (!userProjects.length) {
                             client.first('' +
                                     'DELETE FROM "Project" WHERE id = $1', [projectId])
+                                .then(resolve)
+                                .catch(reject)
+                        } else if (up.isAdmin) {
+                            client.first('' +
+                                'UPDATE "UserProject" ' +
+                                'SET "isAdmin" = "1" ' +
+                                'WHERE "user" = $1 AND "project" = $2',
+                                [userProjects[0].user, userProjects[0].project])
                                 .then(resolve)
                                 .catch(reject)
                         }
