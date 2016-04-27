@@ -95,9 +95,15 @@ User.prototype.delete = function(id) {
                 })
                 function final() {
                     client.query('' +
-                            'DELETE FROM "User" WHERE id = $1',
+                        'DELETE FROM "TimeInstance" WHERE "user" = $1',
                         [id])
-                        .then(resolve)
+                        .then(function() {
+                            client.query('' +
+                                    'DELETE FROM "User" WHERE id = $1',
+                                [id])
+                                .then(resolve)
+                                .catch(reject)
+                        })
                         .catch(reject)
                 }
             })

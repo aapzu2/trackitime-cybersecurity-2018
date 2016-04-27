@@ -51,7 +51,7 @@ Instance.prototype.findAllByUser = function(user) {
 Instance.prototype.findAllByProjectAndUser = function(project, user) {
     return new Promise(function(resolve, reject) {
         client.query('' +
-            'SELECT t.*, p.name AS "projectName", up."isAdmin" AS "isProjectAdmin", u."username" AS "userUsername", u.id AS "userId" ' +
+            'SELECT t.*, t.to - t.from AS "duration", p.name AS "projectName", up."isAdmin" AS "isProjectAdmin", u."username" AS "userUsername", u.id AS "userId" ' +
             'FROM "TimeInstance" t ' +
             'JOIN "UserProject" up ON t.project = up.project ' +
             'JOIN "Project" p on t.project = p.id ' +

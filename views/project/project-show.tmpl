@@ -118,7 +118,7 @@
                         <% _.each(data.instances, function(instance) { %>
                             <tr>
                                 <td><span class="moment-date"><%= instance.from %></span></td>
-                                <td><%= instance.duration %></td>
+                                <td><%= moment.duration(instance.duration).humanize() %></td>
                                 <td><%= instance.description %></td>
                             </tr>
                         <% }) %>
