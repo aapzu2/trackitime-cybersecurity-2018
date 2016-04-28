@@ -20,9 +20,20 @@ body.signup-page div.alert.flash-alert {
   margin-top: 0px;
   margin-bottom: 20px;
 }
-.fp-title {
+.index-page .fp-title {
   margin-top: 70px;
 }
-.project-box {
+.index-page .project-box {
   text-align: left;
+}
+.index-page .project-box div.icon {
+  top: 5px;
+  right: 7px;
+  font-size: 70px;
+}
+.index-page .project-box div.icon a {
+  color: inherit;
+}
+.index-page .project-box:hover div.icon {
+  font-size: 80px;
 }

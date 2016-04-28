@@ -49,7 +49,7 @@
     <div class="col-md-6 col-lg-4">
         <div class="box box-solid">
             <div class="box-header with-border">
-                <h3 class="box-title">Add a instance!</h3>
+                <h3 class="box-title">Add an instance!</h3>
             </div>
             <div class="box-body text-center">
                 <a href="/instance/create?project=<%= data.project.id %>"><i class="fa fa-plus fa-5x"></i></a>
@@ -96,7 +96,7 @@
                 <h3 class="box-title">Time Used</h3>
             </div>
             <div class="box-body text-center">
-                <h3><%= moment.duration(data.project.totalTimeUsed).humanize() %></h3>
+                <h3><%= data.project.totalTimeUsed ? moment.duration(data.project.totalTimeUsed).humanize() : "none" %></h3>
             </div>
         </div>
     </div>

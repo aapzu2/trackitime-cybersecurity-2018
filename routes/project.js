@@ -55,8 +55,13 @@ module.exports = function(app) {
     })
 
     app.get('/project/edit/:id', function(req, res) {
-        Project.findByUserAndId(req.user, req.params.id)
-            .then(function(project) {
+        Promise.all([
+            Project.findByUserAndId(req.user, req.params.id),
+            Project.findOwnersByProject(req.params.id)
+        ])
+            .then(function(values) {
+                var project = values[0]
+                var owners = values[1]
                 if(!project) {
                     res.statusCode = 404
                     res.send("Not found")
@@ -66,7 +71,8 @@ module.exports = function(app) {
                         title: "Edit project",
                         data: {
                             user: req.user,
-                            project: project
+                            project: project,
+                            owners: owners
                         }
                     })
                 }
@@ -177,6 +183,41 @@ module.exports = function(app) {
                 }
             })
             .catch(errorHandler)
+    })
+
+    app.post('/project/delete', function(req, res) {
+        var errorHandler = function(err) {
+            req.flash('error', err.message)
+            res.redirect('back')
+        }
+        Project.findByUserAndId(req.user, req.body.id)
+            .then(function(project) {
+                if (!project.isProjectAdmin) {
+                    res.statusCode = 403
+                    res.send("Not authorized")
+                    return
+                } else {
+                    Project.delete(req.body.id)
+                        .then(function() {
+                            req.flash('info', "Project deleted succesfully!")
+                            res.redirect("/project/list")
+                        })
+                        .catch(errorHandler)
+                }
+            })
+            .catch(errorHandler)
+    })
+    
+    app.post('/project/removeUser', function(req, res) {
+        Project.deleteFromUser(req.body.id, req.user)
+            .then(function() {
+                req.flash('info', "You are now removed from the project succesfully!")
+                res.redirect("/project/list")
+            })
+            .catch(function(err) {
+                req.flash('error', err.message)
+                res.redirect('/project/list')
+            })
     })
 
     return this

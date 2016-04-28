@@ -132,28 +132,34 @@ Project.prototype.deleteFromUser = function(project, user) {
     return new Promise(function(resolve, reject) {
         var userId = user.id !== undefined ? user.id : user
         var projectId = project.id !== undefined ? project.id : project
-        client.query('DELETE FROM "UserProject" WHERE "user" = $1 AND "project" = $2 RETURNING "project", "user", "isAdmin"', [userId, projectId])
-            .then(function(up) {
-                client.query('' +
-                    'SELECT * FROM "UserProject" WHERE project = $1', [projectId])
-                    .then(function(userProjects) {
-                        // If was the only one
-                        if (!userProjects.length) {
-                            client.first('' +
-                                    'DELETE FROM "Project" WHERE id = $1', [projectId])
-                                .then(resolve)
-                                .catch(reject)
-                        } else if (up.isAdmin) {
-                            client.first('' +
-                                'UPDATE "UserProject" ' +
-                                'SET "isAdmin" = "1" ' +
-                                'WHERE "user" = $1 AND "project" = $2',
-                                [userProjects[0].user, userProjects[0].project])
-                                .then(resolve)
-                                .catch(reject)
-                        }
-                    })
-                    .catch(reject)
+        client.first('DELETE FROM "UserProject" WHERE "user" = $1 AND "project" = $2 RETURNING "project", "user", "isAdmin"', [userId, projectId])
+            .then(function(removedUp) {
+                if(removedUp) {
+                    client.query('' +
+                        'SELECT * FROM "UserProject" WHERE project = $1', [projectId])
+                        .then(function(userProjects) {
+                            // If was the only one
+                            if (!userProjects.length) {
+                                client.first('' +
+                                        'DELETE FROM "Project" WHERE id = $1', [projectId])
+                                    .then(resolve)
+                                    .catch(reject)
+                            } else if (removedUp.isAdmin) {
+                                client.first('' +
+                                    'UPDATE "UserProject" ' +
+                                    'SET "isAdmin" = \'true\' ' +
+                                    'WHERE "user" = $1 AND "project" = $2',
+                                    [userProjects[0].user, projectId])
+                                    .then(resolve)
+                                    .catch(reject)
+                            } else {
+                                resolve()
+                            }
+                        })
+                        .catch(reject)
+                } else {
+                    reject(new Error("No project found!"))
+                }
             })
             .catch(reject)
     })
