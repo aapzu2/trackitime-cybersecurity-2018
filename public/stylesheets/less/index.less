@@ -2,6 +2,7 @@
 .index-page {
   .fp-title {
     margin-top: 70px;
+    margin-bottom: 20px;
   }
   .project-box {
     text-align: left;
@@ -14,10 +15,21 @@
         color: inherit;
       }
     }
+
     &:hover {
       div.icon {
         font-size: 80px;
       }
     }
+  }
+}
+@media (max-width: 767px) {
+  .small-box .icon {
+    display: block;
+  }
+}
+@media (max-width: 300px) {
+  .small-box .icon {
+    display: none;
   }
 }

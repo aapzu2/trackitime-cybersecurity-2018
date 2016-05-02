@@ -7,49 +7,52 @@
     </ol>
 </section>
 <section class="content">
-<div class="col-lg-6 col-lg-offset-3">
-    <div class="box box-solid box-primary">
-        <div class="box-header">
-            <span class="box-title">Edit your profile</span>
+    <div class="row">
+
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    <span class="box-title">Edit your profile</span>
+                </div>
+                <form class="no-margin" action="/profile/edit" method="post" id="profileEditForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="userNameInput">Username</label>
+                            <input type="text" name="username" class="form-control" id="userNameInput" value="<%= data.user.username %>" disabled title="The username cannot be changed">
+                        </div>
+                        <input type="hidden" name="id" value="<%= data.user.id %>">
+                        <div class="form-group">
+                            <label for="nameInput">Full Name</label>
+                            <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.user.name %>" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="oldPasswordInput">Old Password</label>
+                            <input name="oldPassword" type="password" class="form-control" id="oldPasswordInput" placeholder="Old Password" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPasswordInput">New Password</label>
+                            <input name="password" type="password" class="form-control" id="newPasswordInput" placeholder="New Password" maxlength="50">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPasswordAgainInput">New Password Again</label>
+                            <input name="password2" type="password" class="form-control" id="newPasswordAgainInput" placeholder="New Password Again" maxlength="50">
+                        </div>
+                        <div class="col-xs-12 pwd-info-container">
+                            <span class="pwd-info"></span>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-danger pull-left" data-toggle="modal" data-target="#userDeleteModal">
+                            Delete profile
+                        </button>
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form class="no-margin" action="/profile/edit" method="post" id="profileEditForm">
-            <div class="box-body">
-                <div class="form-group">
-                    <label for="userNameInput">Username</label>
-                    <input type="text" name="username" class="form-control" id="userNameInput" value="<%= data.user.username %>" disabled title="The username cannot be changed">
-                </div>
-                <input type="hidden" name="id" value="<%= data.user.id %>">
-                <div class="form-group">
-                    <label for="nameInput">Full Name</label>
-                    <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.user.name %>" maxlength="50">
-                </div>
-                <div class="form-group">
-                    <label for="oldPasswordInput">Old Password</label>
-                    <input name="oldPassword" type="password" class="form-control" id="oldPasswordInput" placeholder="Old Password" maxlength="50">
-                </div>
-                <div class="form-group">
-                    <label for="newPasswordInput">New Password</label>
-                    <input name="password" type="password" class="form-control" id="newPasswordInput" placeholder="New Password" maxlength="50">
-                </div>
-                <div class="form-group">
-                    <label for="newPasswordAgainInput">New Password Again</label>
-                    <input name="password2" type="password" class="form-control" id="newPasswordAgainInput" placeholder="New Password Again" maxlength="50">
-                </div>
-                <div class="col-xs-12 pwd-info-container">
-                    <span class="pwd-info"></span>
-                </div>
-            </div>
-            <div class="box-footer">
-                <button type="button" class="btn btn-danger pull-left" data-toggle="modal" data-target="#userDeleteModal">
-                    Delete profile
-                </button>
-                <button type="submit" class="btn btn-primary pull-right">
-                    Save
-                </button>
-            </div>
-        </form>
     </div>
-</div>
 </section>
 <!-- Modal -->
 <div class="modal modal-danger fade" id="userDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

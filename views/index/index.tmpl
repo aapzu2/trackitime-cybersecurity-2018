@@ -1,35 +1,38 @@
 <section class="content index-page text-center">
-    <% if(data.user) { %>
-        <h1 class="fp-title">Welcome <%= data.user.username %>!</h1>
-        <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-            <% var colors = ['bg-red', 'bg-yellow', 'bg-aqua', 'bg-blue', 'bg-light-blue',
-            'bg-green', 'bg-navy', 'bg-teal', 'bg-olive', 'bg-lime', 'bg-orange', 'bg-fuchsia', 'bg-purple', 'bg-maroon'] %>
+    <div class="row">
+        <% if(data.user) { %>
+            <h1 class="fp-title">Welcome <%= data.user.username %>!</h1>
+            <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+                <% var colors = ['bg-red', 'bg-yellow', 'bg-aqua', 'bg-blue', 'bg-light-blue',
+                'bg-green', 'bg-navy', 'bg-teal', 'bg-olive', 'bg-lime', 'bg-orange', 'bg-fuchsia', 'bg-purple', 'bg-maroon'] %>
 
-            <% _.each(data.projects, function(project) { %>
-                <% var colorClass = colors[Math.floor(Math.random() * 14)] %>
-                <div class="col-xs-4">
-                <!-- small box -->
-                    <div class="project-box small-box <%= colorClass %>">
+                <% for(var i = 0; i < data.projects.length && i < 9; i++) { %>
+                    <% var colorClass = colors[Math.floor(Math.random() * 14)] %>
+                    <% var project = data.projects[i] %>
+                    <div class="col-md-6 col-lg-4">
+                    <!-- small box -->
+                        <div class="project-box small-box <%= colorClass %>">
 
-                        <div class="inner">
-                            <h4><%= project.name %></h4>
+                            <div class="inner">
+                                <h4><%= project.name %></h4>
 
-                            <p><%= project.totalTimeUsed != null ? moment.duration(project.totalTimeUsed).humanize() : "no time"%> used</p>
+                                <p><%= project.totalTimeUsed != null ? moment.duration(project.totalTimeUsed).humanize() : "no time"%> used</p>
+                            </div>
+                            <div class="icon">
+                                <a class="fa fa-plus" href="/instance/create?project=<%= project.id %>" title="Add an instance!"></a>
+                            </div>
+                            <a href="/project/show/<%= project.id %>" class="small-box-footer">
+                                More info <i class="fa fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <div class="icon">
-                            <a class="fa fa-plus" href="/instance/create?project=<%= project.id %>" title="Add an instance!"></a>
-                        </div>
-                        <a href="/project/show/<%= project.id %>" class="small-box-footer">
-                            More info <i class="fa fa-arrow-circle-right"></i>
-                        </a>
                     </div>
-                </div>
-            <% }) %>
-        </div>
-    <% } else { %>
-        <h1 class="fp-title">Welcome to Trackitime!</h1>
-        <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-            <a class="btn btn-lg btn-primary" href="/signup">Get started!</a>
-        </div>
-    <% } %>
+                <% } %>
+            </div>
+        <% } else { %>
+            <h1 class="fp-title">Welcome to Trackitime!</h1>
+            <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <a class="btn btn-lg btn-primary" href="/signup">Get started!</a>
+            </div>
+        <% } %>
+    </div>
 </section>

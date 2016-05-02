@@ -9,24 +9,26 @@
     </ol>
 </section>
 <section class="content">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="box box-solid">
-            <div class="box-header with-border">
-                <h3 class="box-title">Sharing</h3>
-            </div>
-            <div class="box-body">
-                <span>
-                    After sharing the user(s) you share the project to get the exactly same rights for the project than you do have.
-                    No one can delete the project completely, only remove themselves from it. You can share the project to many other users, but only one at the time.
-                </span>
-                <form class="no-margin" action="/project/share" method="post">
-                    <input type="hidden" name="id" value="<%= data.project.id %>">
-                    <div class="form-group">
-                        <label for="userNameInput">The username of the user you'd like to share the project to</label>
-                        <input type="text" name="username" class="form-control" id="userNameInput" maxlength="50">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Share</button>
-                </form>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Sharing</h3>
+                </div>
+                <div class="box-body">
+                    <span>
+                        After sharing the user(s) you share the project to get the exactly same rights for the project than you do have.
+                        No one can delete the project completely, only remove themselves from it. You can share the project to many other users, but only one at the time.
+                    </span>
+                    <form class="no-margin" action="/project/share" method="post">
+                        <input type="hidden" name="id" value="<%= data.project.id %>">
+                        <div class="form-group">
+                            <label for="userNameInput">The username of the user you'd like to share the project to</label>
+                            <input type="text" name="username" class="form-control" id="userNameInput" maxlength="50">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Share</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

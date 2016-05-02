@@ -6,30 +6,33 @@
     </ol>
 </section>
 <section class="content">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <span class="box-title">Create New Project</span>
+    <div class="row">
+
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    <span class="box-title">Create New Project</span>
+                </div>
+                <form class="no-margin" action="/project/create" method="post">
+                    <div class="box-body">
+                            <div class="form-group">
+                                <label for="nameInput">Name</label>
+                                <input name="name" type="text" class="form-control" id="nameInput" placeholder="The name of the project" maxlength="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="descriptionInput">Description</label>
+                                <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" placeholder="Describe the project" maxlength="500"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateStartedInput">Started</label>
+                                <input name="started" type="date" class="form-control" id="dateStartedInput" placeholder="When was/is the project started?" value="<%= moment().format('YYYY-MM-DD') %>" min="1900-01-01">
+                            </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary pull-right">Create</button>
+                    </div>
+                </form>
             </div>
-            <form class="no-margin" action="/project/create" method="post">
-                <div class="box-body">
-                        <div class="form-group">
-                            <label for="nameInput">Name</label>
-                            <input name="name" type="text" class="form-control" id="nameInput" placeholder="The name of the project" maxlength="50">
-                        </div>
-                        <div class="form-group">
-                            <label for="descriptionInput">Description</label>
-                            <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" placeholder="Describe the project" maxlength="500"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="dateStartedInput">Started</label>
-                            <input name="started" type="date" class="form-control" id="dateStartedInput" placeholder="When was/is the project started?" value="<%= moment().format('YYYY-MM-DD') %>" min="1900-01-01">
-                        </div>
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-primary pull-right">Create</button>
-                </div>
-            </form>
         </div>
     </div>
 </section>

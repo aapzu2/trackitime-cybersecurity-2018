@@ -7,42 +7,45 @@
     </ol>
 </section>
 <section class="content">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <span class="box-title">Create New Instance</span>
+    <div class="row">
+
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    <span class="box-title">Create New Instance</span>
+                </div>
+                <form class="no-margin" action="/instance/create" method="post">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="projectInput">Project</label>
+                            <% if(data.projects.length) { %>
+                                <select class="form-control" id="projectInput" name="project">
+                                    <% _.each(data.projects, function(p) { %>
+                                        <option value="<%= p.id %>" <%= data.project && p.id == data.project ? 'selected' : '' %>><%= p.name %></option>
+                                    <% }) %>
+                                </select>
+                            <% } else { %>
+                                <span>No projects yet. <a href="/project/create">Create one!</a></span>
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="descriptionInput">Description</label>
+                            <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" placeholder="What did you do?" maxlength="500"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>From</label>
+                            <input name="from" type="text" class="form-control" id="fromInput" maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <label>To</label>
+                            <input name="to" type="text" class="form-control" id="toInput" maxlength="15">
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary pull-right">Create</button>
+                    </div>
+                </form>
             </div>
-            <form class="no-margin" action="/instance/create" method="post">
-                <div class="box-body">
-                    <div class="form-group">
-                        <label for="projectInput">Project</label>
-                        <% if(data.projects.length) { %>
-                            <select class="form-control" id="projectInput" name="project">
-                                <% _.each(data.projects, function(p) { %>
-                                    <option value="<%= p.id %>" <%= data.project && p.id == data.project ? 'selected' : '' %>><%= p.name %></option>
-                                <% }) %>
-                            </select>
-                        <% } else { %>
-                            <span>No projects yet. <a href="/project/create">Create one!</a></span>
-                        <% } %>
-                    </div>
-                    <div class="form-group">
-                        <label for="descriptionInput">Description</label>
-                        <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" placeholder="What did you do?" maxlength="500"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>From</label>
-                        <input name="from" type="text" class="form-control" id="fromInput" maxlength="15">
-                    </div>
-                    <div class="form-group">
-                        <label>To</label>
-                        <input name="to" type="text" class="form-control" id="toInput" maxlength="15">
-                    </div>
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-primary pull-right">Create</button>
-                </div>
-            </form>
         </div>
     </div>
 </section>

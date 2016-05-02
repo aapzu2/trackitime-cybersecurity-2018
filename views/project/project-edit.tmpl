@@ -7,39 +7,42 @@
     </ol>
 </section>
 <section class="content">
-    <div class="col-lg-6 col-lg-offset-3">
-        <div class="box box-solid box-primary">
-            <div class="box-header">
-                <span class="box-title">Edit Project</span>
+    <div class="row">
+
+        <div class="col-lg-6 col-lg-offset-3">
+            <div class="box box-solid box-primary">
+                <div class="box-header">
+                    <span class="box-title">Edit Project</span>
+                </div>
+                <form class="no-margin" action="/project/edit" method="post">
+                    <input type="hidden" name="id" value="<%= data.project.id %>">
+                    <div class="box-body">
+                        <% if(data.project.isProjectAdmin) { %>
+                            <div class="form-group">
+                                <label for="nameInput">Name</label>
+                                <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.project.name %>" maxlength="50">
+                            </div>
+                            <div class="form-group">
+                                <label for="descriptionInput">Description</label>
+                                <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" maxlength="500"><%= data.project.description %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateStartedInput">Started</label>
+                                <input name="started" type="date" class="form-control" id="dateStartedInput" value="<%= moment(data.project.started).format('YYYY-MM-DD') %>">
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="box-footer">
+                        <% if(data.owners.length > 1) { %>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeFromProjectModal">Remove yourself from the project</button>
+                        <% } %>
+                        <% if(data.project.isProjectAdmin) { %>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProjectModal">Delete whole project</button>
+                        <% } %>
+                        <button type="submit" class="btn btn-primary pull-right">Save</button>
+                    </div>
+                </form>
             </div>
-            <form class="no-margin" action="/project/edit" method="post">
-                <input type="hidden" name="id" value="<%= data.project.id %>">
-                <div class="box-body">
-                    <% if(data.project.isProjectAdmin) { %>
-                        <div class="form-group">
-                            <label for="nameInput">Name</label>
-                            <input name="name" type="text" class="form-control" id="nameInput" value="<%= data.project.name %>" maxlength="50">
-                        </div>
-                        <div class="form-group">
-                            <label for="descriptionInput">Description</label>
-                            <textarea name="description" style="resize:vertical;" class="form-control" id="descriptionInput" maxlength="500"><%= data.project.description %></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="dateStartedInput">Started</label>
-                            <input name="started" type="date" class="form-control" id="dateStartedInput" value="<%= moment(data.project.started).format('YYYY-MM-DD') %>">
-                        </div>
-                    <% } %>
-                </div>
-                <div class="box-footer">
-                    <% if(data.owners.length > 1) { %>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeFromProjectModal">Remove yourself from the project</button>
-                    <% } %>
-                    <% if(data.project.isProjectAdmin) { %>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProjectModal">Delete whole project</button>
-                    <% } %>
-                    <button type="submit" class="btn btn-primary pull-right">Save</button>
-                </div>
-            </form>
         </div>
     </div>
 </section>

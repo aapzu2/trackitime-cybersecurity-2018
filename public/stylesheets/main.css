@@ -22,6 +22,7 @@ body.signup-page div.alert.flash-alert {
 }
 .index-page .fp-title {
   margin-top: 70px;
+  margin-bottom: 20px;
 }
 .index-page .project-box {
   text-align: left;
@@ -36,4 +37,14 @@ body.signup-page div.alert.flash-alert {
 }
 .index-page .project-box:hover div.icon {
   font-size: 80px;
+}
+@media (max-width: 767px) {
+  .small-box .icon {
+    display: block;
+  }
+}
+@media (max-width: 300px) {
+  .small-box .icon {
+    display: none;
+  }
 }
