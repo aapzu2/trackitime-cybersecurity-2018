@@ -55,14 +55,9 @@ module.exports = function(app) {
     })
 
     app.get('/project/edit/:id', function(req, res) {
-        Promise.all([
-            Project.findByUserAndId(req.user, req.params.id),
-            Project.findOwnersByProject(req.params.id)
-        ])
-            .then(function(values) {
-                var project = values[0]
-                var owners = values[1]
-                if(!project) {
+        Project.findByUserAndId(req.user, req.params.id)
+            .then(function(project) {
+                if(!project || !project.isProjectAdmin) {
                     res.statusCode = 404
                     res.send("Not found")
                 } else {
@@ -71,8 +66,7 @@ module.exports = function(app) {
                         title: "Edit project",
                         data: {
                             user: req.user,
-                            project: project,
-                            owners: owners
+                            project: project
                         }
                     })
                 }
@@ -84,33 +78,45 @@ module.exports = function(app) {
     })
 
     app.post('/project/edit', function(req, res) {
-        Project.edit({
-            name: req.body.name,
-            description: req.body.description,
-            started: req.body.started,
-            user: req.user.id,
-            id: req.body.id
-        })
-            .then(function(rows) {
-                req.flash('info', "Project edited succesfully!")
-                res.redirect('/project/show/' + rows[0].id)
+        function errorHandler(err) {
+            req.flash('error', err.message)
+            res.redirect('/project/edit/' + req.body.id)
+        }
+        Project.findByUserAndId(req.user, req.body.id)
+            .then(function(project) {
+                if(!project || !project.isProjectAdmin) {
+                    res.statusCode = 404
+                    res.send()
+                } else {
+                    Project.edit({
+                        name: req.body.name,
+                        description: req.body.description,
+                        started: req.body.started,
+                        user: req.user.id,
+                        id: req.body.id
+                    })
+                        .then(function (rows) {
+                            req.flash('info', "Project edited succesfully!")
+                            res.redirect('/project/show/' + rows[0].id)
+                        })
+                        .catch(errorHandler)
+                }
             })
-            .catch(function(err) {
-                req.flash('error', err.message)
-                res.redirect('/project/edit/' + req.body.id)
-            })
+            .catch(errorHandler)
     })
 
     app.get('/project/show/:id', function(req, res, next) {
         Promise.all([
             Project.findByUserAndId(req.user, req.params.id),
             Instance.findAllByProjectAndUser(req.params.id, req.user),
-            Project.findOwnersByProject(req.params.id)
+            Project.findOwnersByProject(req.params.id),
+            Project.findAdminByProject(req.params.id)
         ])
             .then(function(values) {
                 var project = values[0]
                 var instances = values[1]
                 var owners = values[2]
+                var admin = values[3]
 
                 if(!project) {
                     res.statusCode = 404
@@ -125,7 +131,8 @@ module.exports = function(app) {
                         user: req.user,
                         owners: owners,
                         project: project,
-                        instances: instances
+                        instances: instances,
+                        admin: admin
                     }
                 })
             })

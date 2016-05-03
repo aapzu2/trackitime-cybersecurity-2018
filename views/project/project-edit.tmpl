@@ -33,12 +33,7 @@
                         <% } %>
                     </div>
                     <div class="box-footer">
-                        <% if(data.owners.length > 1) { %>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeFromProjectModal">Remove yourself from the project</button>
-                        <% } %>
-                        <% if(data.project.isProjectAdmin) { %>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProjectModal">Delete whole project</button>
-                        <% } %>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteProjectModal">Delete whole project</button>
                         <button type="submit" class="btn btn-primary pull-right">Save</button>
                     </div>
                 </form>
@@ -48,41 +43,20 @@
 </section>
 
 <!-- RemoveFromProject -->
-<div class="modal modal-danger fade" id="removeFromProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal modal-danger fade" id="deleteProjectModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form action="/project/removeUser" method="post" class="no-margin">
+        <form action="/project/delete" method="post" class="no-margin">
             <input type="hidden" name="id" value="<%= data.project.id %>" >
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Are you sure you want to remove yourself from this project?</h4>
+                    <h4 class="modal-title">Are you sure you want to delete the whole project?</h4>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
-<% if(data.project.isProjectAdmin) { %>
-    <!-- RemoveFromProject -->
-    <div class="modal modal-danger fade" id="deleteProjectModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <form action="/project/delete" method="post" class="no-margin">
-                <input type="hidden" name="id" value="<%= data.project.id %>" >
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Are you sure you want to delete the whole project?</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-<% } %>

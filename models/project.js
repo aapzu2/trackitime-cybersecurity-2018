@@ -168,9 +168,23 @@ Project.prototype.deleteFromUser = function(project, user) {
 Project.prototype.findOwnersByProject = function(project) {
     return new Promise(function(resolve, reject) {
         client.query('' +
-            'SELECT "User".id, "User".username, "User".name FROM "UserProject" ' +
+            'SELECT "User".id, "User".username, "User".name ' +
+            'FROM "UserProject" ' +
             'JOIN "User" ON "User".id = "UserProject".user ' +
             'WHERE "UserProject".project = $1',
+            [project.id !== undefined ? project.id : project])
+            .then(resolve)
+            .catch(reject)
+    })
+}
+
+Project.prototype.findAdminByProject = function(project) {
+    return new Promise(function(resolve, reject) {
+        client.first('' +
+            'SELECT u.id, u.username, u.name ' +
+            'FROM "UserProject" up ' +
+            'JOIN "User" u ON u.id = up.user ' +
+            'WHERE up.project = $1 AND up."isAdmin" = true',
             [project.id !== undefined ? project.id : project])
             .then(resolve)
             .catch(reject)

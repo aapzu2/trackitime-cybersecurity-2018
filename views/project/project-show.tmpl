@@ -16,7 +16,20 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Info</h3>
                     <div class="box-tools">
-                        <a href="/project/edit/<%= data.project.id %>" class="fa fa-bars"></a>
+                        <a href="#" class="dropdown-toggle fa fa-bars" data-toggle="dropdown">
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <% if(data.admin.id == data.user.id) { %>
+                                <li>
+                                    <a href="/project/edit/<%= data.project.id %>">Edit project</a>
+                                </li>
+                            <% } %>
+                            <% if(data.owners.length > 1) { %>
+                                <li class="danger">
+                                    <a href="#" data-toggle="modal" data-target="#removeFromProjectModal">Remove yourself from the project</a>
+                                </li>
+                            <% } %>
+                        </ul>
                     </div>
                 </div>
                 <div class="box-body">
@@ -42,6 +55,14 @@
                         </label>
                         <div>
                             <%= moment(data.project.started).format('DD.MM.YYYY') %>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label">
+                            Project owner
+                        </label>
+                        <div>
+                            <%= data.admin.id == data.user.id ? 'You' : data.admin.name + " (" + data.admin.username + ")" %>
                         </div>
                     </div>
                 </div>
@@ -130,3 +151,22 @@
         </div>
     </div>
 </section>
+
+<!-- RemoveFromProject -->
+<div class="modal modal-danger fade" id="removeFromProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form action="/project/removeUser" method="post" class="no-margin">
+            <input type="hidden" name="id" value="<%= data.project.id %>" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Are you sure you want to remove yourself from this project?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
