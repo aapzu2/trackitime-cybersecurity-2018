@@ -7,6 +7,8 @@ Trackitime	is	used	with	an	easily-used web application,	which	is	also	supportive
 
 Trackitime is my university's database/web-app practice work (University of Helsinki).
 
+<img src="http://data.aapzu.xyz/img/trackitime.jpg" />
+
 ### Useful links
 * <a href="http://trackitime.haanpuu.fi" target="_blank">A running demo</a>
 * <a href="http://trackitime.haanpuu.fi/documentation" target="_blank">The documentation of the app (PDF)</a>
