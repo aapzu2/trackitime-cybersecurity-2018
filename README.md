@@ -10,8 +10,8 @@ Trackitime is my university's database/web-app practice work (University of Hels
 <img src="http://data.aapzu.xyz/img/trackitime.jpg" />
 
 ### Useful links
-* <a href="http://trackitime.haanpuu.fi" target="_blank">A running demo</a>
-* <a href="http://trackitime.haanpuu.fi/documentation" target="_blank">The documentation of the app (PDF)</a>
+* <a href="http://trackitime.herokuapp.com" target="_blank">A running demo</a>
+* <a href="http://trackitime.herokuapp.com/documentation" target="_blank">The documentation of the app (PDF)</a>
 
 ### How to use locally
 
