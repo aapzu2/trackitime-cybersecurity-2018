@@ -1,49 +1,49 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var cons = require('consolidate');
-var _ = require('underscore');
+var express = require('express')
+var path = require('path')
+var favicon = require('serve-favicon')
+var morgan = require('morgan')
+var cookieParser = require('cookie-parser')
+var bodyParser = require('body-parser')
+var cons = require('consolidate')
+var _ = require('underscore')
 var passport = require('passport')
-var session = require("express-session")
-var flash    = require('express-flash')
+var session = require('express-session')
+var flash = require('express-flash')
 var fs = require('fs')
 
-var app = express();
+var app = express()
 
-app.use(favicon("./favicon.ico"))
+app.use(favicon('./favicon.ico'))
 
-require('underscore-express')(app);
-app.engine('html',cons.underscore);
-app.set('views', path.join(__dirname, 'views'));
+require('underscore-express')(app)
+app.engine('html', cons.underscore)
+app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static(__dirname + '/public'))
 
 var dbClient = require('./app/db-client')
-require('./config/passport')(passport); // pass passport for configuration
+require('./config/passport')(passport) // pass passport for configuration
 
 // set up our express application
-app.use(morgan('dev')); // log every request to the console
+app.use(morgan('dev')) // log every request to the console
 app.use(bodyParser.urlencoded({
-    extended: true
-}));
+    extended: true,
+}))
 
 app.use(flash()) // use connect-flash for flash messages stored in session
 // required for passport
 app.use(session({
     secret: 'trackitimerules',
     resave: true,
-    saveUninitialized: true
-})); // session secret
+    saveUninitialized: true,
+})) // session secret
 app.use(passport.initialize())
 app.use(passport.session()) // persistent login sessions
 
 // Pass moment.js to every template for date formatting
-app.use(function(req, res, next){
-    res.locals.moment = require('moment');
-    next();
+app.use(function(req, res, next) {
+    res.locals.moment = require('moment')
+    next()
 })
 
 require('./routes/index')(app)
@@ -51,7 +51,6 @@ require('./routes/documentation')(app)
 require('./routes/login')(app, passport)
 require('./routes/signup')(app, passport)
 require('./routes/logout')(app, passport)
-
 
 var authenticateUser = require('./app/authenticateUser')
 

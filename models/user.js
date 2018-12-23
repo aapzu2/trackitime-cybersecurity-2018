@@ -10,7 +10,7 @@ function User() {}
 User.prototype.findById = function(id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT id, username, name, "isAdmin" FROM "User" WHERE id = $1',
+            'SELECT id, username, name, "isAdmin" FROM "User" WHERE id = ?',
             [id])
             .then(resolve)
             .catch(reject)
@@ -21,7 +21,7 @@ User.prototype.findById = function(id) {
 User.prototype.findByUsername = function(username) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT id, username, name, "isAdmin" FROM "User" WHERE username = $1',
+            'SELECT id, username, name, "isAdmin" FROM "User" WHERE username = ?',
             [username])
             .then(resolve)
             .catch(reject)
@@ -31,7 +31,7 @@ User.prototype.findByUsername = function(username) {
 User.prototype.findWithPasswordByUsername = function(username) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT * FROM "User" WHERE username = $1',
+            'SELECT * FROM "User" WHERE username = ?',
             [username])
             .then(resolve)
             .catch(reject)
@@ -41,7 +41,7 @@ User.prototype.findWithPasswordByUsername = function(username) {
 User.prototype.findWithPasswordById= function(id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT * FROM "User" WHERE id = $1',
+            'SELECT * FROM "User" WHERE id = ?',
             [id])
             .then(resolve)
             .catch(reject)
@@ -66,7 +66,7 @@ User.prototype.create = function(data) {
         } else {
             var hashedPassword = bcrypt.hashSync(data.password, null, null)
             client.first('' +
-                'INSERT INTO "User" (name, username, password) values ($1, $2, $3) RETURNING id',
+                'INSERT INTO "User" (name, username, password) values (?, ?, ?) RETURNING id',
                 [data.name, data.username, hashedPassword])
                 .then(resolve)
                 .catch(reject)
@@ -95,11 +95,11 @@ User.prototype.delete = function(id) {
                 })
                 function final() {
                     client.query('' +
-                        'DELETE FROM "TimeInstance" WHERE "user" = $1',
+                        'DELETE FROM "TimeInstance" WHERE "user" = ?',
                         [id])
                         .then(function() {
                             client.query('' +
-                                    'DELETE FROM "User" WHERE id = $1',
+                                    'DELETE FROM "User" WHERE id = ?',
                                 [id])
                                 .then(resolve)
                                 .catch(reject)
@@ -135,7 +135,7 @@ User.prototype.edit = function(data) {
                 }
                 constString += "name='" + name + "'"
                 client.query('' +
-                    'UPDATE "User" SET ' + constString + 'WHERE "id" = $1',
+                    'UPDATE "User" SET ' + constString + 'WHERE "id" = ?',
                     [id])
                     .then(resolve)
                     .catch(reject)
@@ -162,7 +162,7 @@ User.prototype.editByAdmin = function(data) {
         constString += "\"isAdmin\"='" + isAdmin + "' "
 
         client.query('' +
-            'UPDATE "User" SET ' + constString + 'WHERE id = $1',
+            'UPDATE "User" SET ' + constString + 'WHERE id = ?',
             [id])
             .then(resolve)
             .catch(reject)

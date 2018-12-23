@@ -1,5 +1,4 @@
-"use strict";
-
+var moment = require('moment')
 var Project = require('./project')
 var client = require('../app/db-client')
 
@@ -8,7 +7,7 @@ function Instance() {}
 Instance.prototype.findById = function(id) {
     return new Promise(function(resolve, reject) {
         client.first('' +
-            'SELECT * FROM "TimeInstance" WHERE id = $1',
+            'SELECT * FROM "TimeInstance" WHERE id = ?',
             [id])
             .then(resolve)
             .catch(reject)
@@ -22,7 +21,7 @@ Instance.prototype.findByIdAndUser = function(id, user) {
             'FROM "TimeInstance" t ' +
             'JOIN "Project" p ON p.id = t.project ' +
             'JOIN "UserProject" up ON up.project = p.id ' +
-            'WHERE t.id = $1 AND t.user = $2',
+            'WHERE t.id = ? AND t.user = ?',
             [id, user.id !== undefined ? user.id : user])
             .then(resolve)
             .catch(reject)
@@ -30,82 +29,57 @@ Instance.prototype.findByIdAndUser = function(id, user) {
 }
 
 Instance.prototype.findAllByUser = function(user) {
-    return new Promise(function(resolve, reject) {
-        client.query('' +
-            'SELECT ' +
-            'p.id AS "projectId", p.name AS "projectName", ' +
-            'u.id AS "userId", u.name AS "userName", u.username AS "userUsername", ' +
-            'i.id, i.description, i.from, i.to, ' +
-            'up."isAdmin" AS "isProjectAdmin" ' +
-            'FROM "UserProject" up ' +
-            'JOIN "Project" p ON up.project = p.id ' +
-            'JOIN "TimeInstance" i ON p.id = i.project ' +
-            'JOIN "User" u ON i.user = u.id ' +
-            'WHERE up.user = $1 ' +
-            'ORDER BY "from" DESC', [user.id !== undefined ? user.id : user])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.query('' +
+        'SELECT ' +
+        'p.id AS "projectId", Project.name AS "projectName", ' +
+        'u.id AS "userId", u.name AS "userName", u.username AS "userUsername", ' +
+        'TimeInstance.id, TimeInstance.description, TimeInstance.from, TimeInstance.to, ' +
+        'UserProject."isAdmin" AS "isProjectAdmin" ' +
+        'FROM "UserProject" ' +
+        'JOIN "Project" ON UserProject.project = Project.id ' +
+        'JOIN "TimeInstance" ON Project.id = i.project ' +
+        'JOIN "User" ON i.user = User.id ' +
+        'WHERE UserProject.user = ? ' +
+        'ORDER BY "from" DESC', [user.id !== undefined ? user.id : user])
 }
 
 Instance.prototype.findAllByProjectAndUser = function(project, user) {
-    return new Promise(function(resolve, reject) {
-        client.query('' +
-            'SELECT t.*, t.to - t.from AS "duration", p.name AS "projectName", up."isAdmin" AS "isProjectAdmin", u."username" AS "userUsername", u.id AS "userId" ' +
-            'FROM "TimeInstance" t ' +
-            'JOIN "UserProject" up ON t.project = up.project ' +
-            'JOIN "Project" p on t.project = p.id ' +
-            'JOIN "User" u on u.id = up.user ' +
-            'WHERE t.project = $1 AND up.user = $2 ' +
-            'ORDER BY "from" DESC',
-            [project.id !== undefined ? project.id : project, user.id !== undefined ? user.id : user])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.query('' +
+        'SELECT TimeInstance.*, "duration" AS "duration", Project.name AS "projectName", UserProject."isAdmin" AS "isProjectAdmin", User."username" AS "userUsername", User.id AS "userId" ' +
+        'FROM "TimeInstance" ' +
+        'JOIN "UserProject" ON TimeInstance.project = UserProject.project ' +
+        'JOIN "Project" on TimeInstance.project = Project.id ' +
+        'JOIN "User" on User.id = UserProject.user ' +
+        'WHERE TimeInstance.project = ? AND UserProject.user = ? ' +
+        'ORDER BY "from" DESC',
+        [typeof project.id !== 'undefined' ? project.id : project, user.id !== undefined ? user.id : user])
 }
 
 Instance.prototype.findAll = function() {
-    return new Promise(function(resolve, reject) {
-        client.query('SELECT * FROM "TimeInstance"')
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.query('SELECT * FROM "TimeInstance"')
 }
 
 Instance.prototype.delete = function(instance) {
-    return new Promise(function (resolve, reject) {
-        client.first('DELETE FROM "TimeInstance" WHERE id = $1',
-            [instance.id !== undefined ? instance.id : instance])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.first('DELETE FROM "TimeInstance" WHERE id = ?',
+        [instance.id !== undefined ? instance.id : instance])
 }
 
 Instance.prototype.deleteByProjectMember = function(instance, user) {
-    return new Promise(function (resolve, reject) {
-        client.first('' +
-            'DELETE FROM "TimeInstance" WHERE id = $1 AND user = $2' +
-            [instance.id !== undefined ? instance.id : instance, user.id !== undefined ? user.id : user])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.first('' +
+        'DELETE FROM "TimeInstance" WHERE id = ? AND user = ?' +
+        [instance.id !== undefined ? instance.id : instance, user.id !== undefined ? user.id : user])
 }
 
 Instance.prototype.deleteByProjectAdmin = function(instance, user) {
-    return new Promise(function (resolve, reject) {
-        client.first('' +
-            'DELETE FROM "TimeInstance" t ' +
-            'USING "Project" AS p, "UserProject" AS up ' +
-            'WHERE t.project = p.id ' +
-            'AND up.project = p.id ' +
-            'AND up.user = $1 AND t.id = $2',
-            [user.id !== undefined ? user.id : user, instance.id !== undefined ? instance.id : instance])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.first('' +
+        'DELETE FROM "TimeInstance" t ' +
+        'USING "Project" AS p, "UserProject" AS up ' +
+        'WHERE t.project = p.id ' +
+        'AND up.project = p.id ' +
+        'AND up.user = ? AND t.id = ?',
+        [user.id !== undefined ? user.id : user, instance.id !== undefined ? instance.id : instance])
 }
 
-var moment = require('moment')
 Instance.prototype.create = function(data) {
     return new Promise(function(resolve, reject) {
         if(!data.project) {
@@ -121,7 +95,7 @@ Instance.prototype.create = function(data) {
                 } else {
                     client.query('' +
                         'INSERT INTO "TimeInstance" ("description", "from", "to", "project", "user") ' +
-                        'VALUES ($1, $2, $3, $4, $5)',
+                        'VALUES (?, ?, ?, ?, ?)',
                         [data.description, moment.utc(data.from, "DD.MM.YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss'), moment.utc(data.to, "DD.MM.YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss'), data.project, data.user.id !== undefined ? data.user.id : data.user])
                         .then(resolve)
                         .catch(reject)

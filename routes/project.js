@@ -112,12 +112,7 @@ module.exports = function(app) {
             Project.findOwnersByProject(req.params.id),
             Project.findAdminByProject(req.params.id)
         ])
-            .then(function(values) {
-                var project = values[0]
-                var instances = values[1]
-                var owners = values[2]
-                var admin = values[3]
-
+            .then(([ project, instances, owners, admin ]) => {
                 if(!project) {
                     res.statusCode = 404
                     res.send("Not found")

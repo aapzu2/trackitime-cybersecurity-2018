@@ -6,54 +6,47 @@ function Project() {}
 
 Project.prototype.findById = function(id) {
     return new Promise(function(resolve, reject) {
-        client.first('SELECT * FROM "Project" WHERE id = $1', [id])
+        client.first('SELECT * FROM "Project" WHERE id = ?', [id])
             .then(resolve)
             .catch(reject)
     })
 }
 
 Project.prototype.findByUserAndId = function(user, id) {
-    return new Promise(function(resolve, reject) {
-        client.first('' +
-            'SELECT p.*, up."isAdmin" as "isProjectAdmin" ' +
-            'FROM (' +
-                'SELECT p.*, SUM(t.to - t.from) as "totalTimeUsed" ' +
-                'FROM"Project" p ' +
-                'LEFT JOIN "TimeInstance" t ON t.project = p.id ' +
-                'GROUP BY p.id' +
-            ') p ' +
-            'JOIN "UserProject" up ON p.id = up.project ' +
-            'WHERE p.id = $1 AND up.user = $2 ',
-            [id, user.id !== undefined ? user.id : user])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.first('' +
+        'SELECT p.*, UserProject."isAdmin" as "isProjectAdmin" ' +
+        'FROM (' +
+            'SELECT Project.*, SUM(TimeInstance."to" - TimeInstance."from") as "totalTimeUsed" ' +
+            'FROM "Project" ' +
+            'LEFT JOIN "TimeInstance" ON TimeInstance.project = Project.id ' +
+            'GROUP BY Project.id' +
+        ') AS p ' +
+        'JOIN "UserProject" ON p.id = UserProject.project ' +
+        'WHERE p.id = ? AND UserProject.user = ? ',
+        [id, user.id !== undefined ? user.id : user])
 }
 
 Project.prototype.findAllByUser = function(user) {
-    return new Promise(function(resolve, reject) {
-        client.query('' +
-            'SELECT p.*, up."isAdmin" as "isProjectAdmin" ' +
-            'FROM (' +
-                'SELECT p.*, SUM(t.to - t.from) as "totalTimeUsed" ' +
-                'FROM"Project" p ' +
-                'LEFT JOIN "TimeInstance" t ON t.project = p.id ' +
-                'GROUP BY p.id' +
-            ') p ' +
-            'JOIN "UserProject" up ON p.id = up.project ' +
-            'WHERE up.user = $1',
-            [user.id !== undefined ? user.id : user])
-            .then(resolve)
-            .catch(reject)
-    })
+    // TODO: Couldn't redo this functionality in Sqlite so I just stubbed it
+    return client.query('' +
+        'SELECT Project.*, UserProject."isAdmin" as "isProjectAdmin" ' +
+        'FROM (' +
+            'SELECT Project.*, SUM(TimeInstance."to" - TimeInstance."from") as "totalTimeUsed" ' +
+            'FROM Project ' +
+            'LEFT JOIN "TimeInstance" t ON t.project = p.id ' +
+            'GROUP BY p.id' +
+        ') AS p ' +
+        'JOIN "UserProject" ON Project.id = UserProject.project ' +
+        'WHERE UserProject.user = ?',
+        // 'SELECT Project.*, UserProject."isAdmin" as "isProjectAdmin", 0 as "totalTimeUsed" ' +
+        // 'FROM Project ' +
+        // 'JOIN "UserProject" ON Project.id = UserProject.project ' +
+        // 'WHERE UserProject.user = ?',
+        [user.id !== undefined ? user.id : user])
 }
 
 Project.prototype.findAll = function() {
-    return new Promise(function(resolve, reject) {
-        client.query('SELECT * FROM "Project"')
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.query('SELECT * FROM "Project"')
 }
 
 Project.prototype.create = function(data) {
@@ -64,16 +57,20 @@ Project.prototype.create = function(data) {
         if(!data.started.match(/\b\d{4}-\d{2}-?\d{2}\b/g)) {
             reject(new Error("You must give a starting date!"))
         }
+        let projectId
         client.first('' +
-            'INSERT INTO "Project" (name, description, started) VALUES ($1, $2, $3) RETURNING id',
-            [data.name, data.description, data.started])
-            .then(function(project) {
-                client.first('' +
-                    'INSERT INTO "UserProject" ("user", "project", "isAdmin") ' +
-                    'VALUES ($1, $2, $3) RETURNING project AS id',
-                    [data.user.id !== undefined ? data.user.id : data.user, project.id, data.isAdmin ? data.isAdmin : true])
-                    .then(resolve)
-                    .catch(reject)
+            `INSERT INTO "Project" (name, description, started) VALUES ("${data.name}", "${data.description}", "${data.started}")`)
+            .then(() => {
+                return client.first('select last_insert_rowid() as id from Project')
+            })
+            .then(({ id }) => {
+                projectId = id
+                const query = `INSERT INTO "UserProject" ("user", "project") ` +
+                    `VALUES (${data.user.id !== undefined ? data.user.id : data.user}, ${id})`
+                return client.first(query)
+            })
+            .then(() => {
+                resolve(projectId)
             })
             .catch(reject)
     })
@@ -84,20 +81,20 @@ Project.prototype.shareToUser = function(project, username) {
         if (username === "")
             reject(new Error("Username cannot be empty!"))
         else
-            client.first('SELECT * FROM "User" WHERE username = $1',
+            client.first('SELECT * FROM "User" WHERE username = ?',
                 [username])
                 .then(function (user) {
                     if (!user) {
                         reject(new Error('No user ' + username + ' found!'))
                     } else {
                         var projectId = project.id !== undefined ? project.id : project
-                        client.first('SELECT * FROM "UserProject" WHERE user = $1 AND project = $2',
+                        client.first('SELECT * FROM "UserProject" WHERE user = ? AND project = ?',
                             [user.id, projectId])
                             .then(function (row) {
                                 if (row === undefined) {
                                     client.first('' +
                                             'INSERT INTO "UserProject" ("user", "project", "isAdmin") ' +
-                                            'VALUES ($1, $2, false) RETURNING project AS id',
+                                            'VALUES (?, ?, false) RETURNING project AS id',
                                         [user.id, projectId])
                                         .then(resolve)
                                         .catch(reject)
@@ -116,10 +113,10 @@ Project.prototype.shareToUser = function(project, username) {
 
 Project.prototype.delete = function(projectId) {
     return new Promise(function(resolve, reject) {
-        client.query('DELETE FROM "UserProject" WHERE project = $1', [projectId])
+        client.query('DELETE FROM "UserProject" WHERE project = ?', [projectId])
             .then(function() {
                 client.first('' +
-                        'DELETE FROM "Project" WHERE id = $1',
+                        'DELETE FROM "Project" WHERE id = ?',
                     [projectId])
                     .then(resolve)
                     .catch(reject)
@@ -132,23 +129,23 @@ Project.prototype.deleteFromUser = function(project, user) {
     return new Promise(function(resolve, reject) {
         var userId = user.id !== undefined ? user.id : user
         var projectId = project.id !== undefined ? project.id : project
-        client.first('DELETE FROM "UserProject" WHERE "user" = $1 AND "project" = $2 RETURNING "project", "user", "isAdmin"', [userId, projectId])
+        client.first('DELETE FROM "UserProject" WHERE "user" = ? AND "project" = ? RETURNING "project", "user", "isAdmin"', [userId, projectId])
             .then(function(removedUp) {
                 if(removedUp) {
                     client.query('' +
-                        'SELECT * FROM "UserProject" WHERE project = $1', [projectId])
+                        'SELECT * FROM "UserProject" WHERE project = ?', [projectId])
                         .then(function(userProjects) {
                             // If was the only one
                             if (!userProjects.length) {
                                 client.first('' +
-                                        'DELETE FROM "Project" WHERE id = $1', [projectId])
+                                        'DELETE FROM "Project" WHERE id = ?', [projectId])
                                     .then(resolve)
                                     .catch(reject)
                             } else if (removedUp.isAdmin) {
                                 client.first('' +
                                     'UPDATE "UserProject" ' +
                                     'SET "isAdmin" = \'true\' ' +
-                                    'WHERE "user" = $1 AND "project" = $2',
+                                    'WHERE "user" = ? AND "project" = ?',
                                     [userProjects[0].user, projectId])
                                     .then(resolve)
                                     .catch(reject)
@@ -166,29 +163,21 @@ Project.prototype.deleteFromUser = function(project, user) {
 }
 
 Project.prototype.findOwnersByProject = function(project) {
-    return new Promise(function(resolve, reject) {
-        client.query('' +
-            'SELECT "User".id, "User".username, "User".name ' +
-            'FROM "UserProject" ' +
-            'JOIN "User" ON "User".id = "UserProject".user ' +
-            'WHERE "UserProject".project = $1',
-            [project.id !== undefined ? project.id : project])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.query('' +
+        'SELECT "User".id, "User".username, "User".name ' +
+        'FROM "UserProject" ' +
+        'JOIN "User" ON "User".id = "UserProject".user ' +
+        'WHERE "UserProject".project = ?',
+        [project.id !== undefined ? project.id : project])
 }
 
 Project.prototype.findAdminByProject = function(project) {
-    return new Promise(function(resolve, reject) {
-        client.first('' +
-            'SELECT u.id, u.username, u.name ' +
-            'FROM "UserProject" up ' +
-            'JOIN "User" u ON u.id = up.user ' +
-            'WHERE up.project = $1 AND up."isAdmin" = true',
-            [project.id !== undefined ? project.id : project])
-            .then(resolve)
-            .catch(reject)
-    })
+    return client.first('' +
+        'SELECT User.id, User.username, User.name ' +
+        'FROM "UserProject" ' +
+        'JOIN "User" ON User.id = UserProject.user ' +
+        'WHERE UserProject.project = ? AND UserProject."isAdmin" = true',
+        [project.id !== undefined ? project.id : project])
 }
 
 Project.prototype.edit = function(data) {
@@ -203,8 +192,8 @@ Project.prototype.edit = function(data) {
                 else {
                     client.query('' +
                         'UPDATE "Project" ' +
-                        'SET "name" = $1, "description" = $2, "started" = $3 ' +
-                        'WHERE "id" = $4 ' +
+                        'SET "name" = ?, "description" = ?, "started" = ? ' +
+                        'WHERE "id" = ? ' +
                         'RETURNING "id"',
                         [data.name, data.description, data.started, data.id])
                         .then(resolve)
